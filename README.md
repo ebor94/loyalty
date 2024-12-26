@@ -17,7 +17,7 @@ Sistema de fidelización para profesionales de Cerámica Italia.
 ## Instalación
 
 ```bash
-git clone [url-repositorio]
+git clone [https://github.com/ebor94/loyalty]
 cd loyalty
 npm install
 ```
@@ -68,10 +68,3 @@ loyalty/
 - `/professional/:id` - Confirmación del profesional
 - `/dash-professional/:id` - Dashboard del profesional
 
-## Configuración
-
-El proyecto usa variables de entorno para configuración. Crea un archivo `.env`:
-
-```env
-VITE_API_URL=http://api.example.com
-```
