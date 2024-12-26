@@ -1,5 +1,77 @@
-# Vue 3 + TypeScript + Vite
+# Loyalty - Cerámica Italia
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Sistema de fidelización para profesionales de Cerámica Italia.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Tecnologías
+
+- Vue 3
+- TypeScript
+- Tailwind CSS
+- Vite
+
+## Requisitos
+
+- Node.js >= 20.9.0
+- npm >= 10.0.0
+
+## Instalación
+
+```bash
+git clone [url-repositorio]
+cd loyalty
+npm install
+```
+
+## Desarrollo
+
+```bash
+npm run dev
+```
+
+## Producción
+
+```bash
+npm run build
+npm run preview
+```
+
+## Estructura del Proyecto
+
+```
+loyalty/
+├── src/
+│   ├── views/
+│   │   ├── ClientConfirmation.vue
+│   │   ├── ProfessionalConfirmation.vue
+│   │   └── ProfessionalDashboard.vue
+│   ├── router/
+│   │   └── index.ts
+│   ├── types/
+│   │   └── index.ts
+│   └── App.vue
+├── public/
+│   └── assets/
+└── package.json
+```
+
+## Características
+
+- Confirmación de referidos por clientes
+- Dashboard para profesionales
+- Gestión de redenciones
+- Historial de ventas
+- Responsive design
+
+## Rutas
+
+- `/client/:id` - Confirmación del cliente
+- `/professional/:id` - Confirmación del profesional
+- `/dash-professional/:id` - Dashboard del profesional
+
+## Configuración
+
+El proyecto usa variables de entorno para configuración. Crea un archivo `.env`:
+
+```env
+VITE_API_URL=http://api.example.com
+```
