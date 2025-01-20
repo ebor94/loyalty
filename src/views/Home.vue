@@ -6,6 +6,7 @@
       <ExperienceSection />
       <AboutSection/>
       <Brands />
+      <LatestCupon />
     </div>
   </template>
   
@@ -16,4 +17,5 @@
   import ExperienceSection from '../components/experience.vue'
   import AboutSection from '../components/about.vue'
   import Brands from '../components/brands.vue'
+  import LatestCupon from '../components/LatestCupon.vue'
  </script>
