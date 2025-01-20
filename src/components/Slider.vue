@@ -31,11 +31,6 @@
           <br />
           <span class="text-red-500">tus clientes.</span>
         </h1>
-
-        <!-- Botón o CTA opcional -->
-        <button class="mt-8 bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-lg transition-colors">
-          Comienza ahora
-        </button>
       </div>
     </div>
 
