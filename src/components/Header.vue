@@ -2,8 +2,8 @@
     <header class="bg-white py-4 shadow-sm">
       <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
         <!-- Logo -->
-        <div class="w-48">
-          <img src="/src/assets/img/italpuntos-color.png" alt="Italpuntos" class="h-12" />
+         <div class="w-40">
+          <img src="/src/assets/img/italpuntos-color.png" alt="Italpuntos" class="full" />
         </div>
   
         <!-- Búsqueda -->
