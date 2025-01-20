@@ -5,7 +5,7 @@ import { ref } from 'vue'
 interface Store {
  id: number
  name: string
- logo: string
+ image: string
 }
 
 export const useStoreStore = defineStore('store', () => {
