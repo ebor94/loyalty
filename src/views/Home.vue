@@ -5,6 +5,7 @@
       <HeroSlider />
       <ExperienceSection />
       <AboutSection/>
+      <Brands />
     </div>
   </template>
   
@@ -14,4 +15,5 @@
   import HeroSlider from '../components/Slider.vue'
   import ExperienceSection from '../components/experience.vue'
   import AboutSection from '../components/about.vue'
+  import Brands from '../components/brands.vue'
  </script>
