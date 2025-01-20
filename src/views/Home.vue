@@ -4,9 +4,7 @@
       <Headers />
       <HeroSlider />
       <ExperienceSection />
-      <main>
-        <slot></slot>
-      </main>
+      <AboutSection/>
     </div>
   </template>
   
@@ -15,4 +13,5 @@
   import Headers from '../components/Header.vue'
   import HeroSlider from '../components/Slider.vue'
   import ExperienceSection from '../components/experience.vue'
+  import AboutSection from '../components/about.vue'
  </script>
