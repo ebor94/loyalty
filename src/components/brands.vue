@@ -3,9 +3,8 @@
       <div class="max-w-7xl mx-auto px-4">
         <div class="text-center mb-12">
           <h2 class="text-4xl font-bold">
-            More Than <span class="text-red-500">3000+ Stores</span> In One Place!
+            ¡Estas son algunas de las <span class="text-red-500">experiencias</span> disponibles para ti!
           </h2>
-          <p class="text-gray-600 mt-4">Search your favourite store & get many deals</p>
         </div>
   
         <div v-if="loading" class="text-center">
@@ -22,12 +21,7 @@
             <img :src="store.image" :alt="store.name" class="max-h-16" />
           </div>
         </div>
-  
-        <div class="text-center mt-12">
-          <button class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg transition-colors">
-            VISIT ALL STORES
-          </button>
-        </div>
+
       </div>
     </section>
   </template>
