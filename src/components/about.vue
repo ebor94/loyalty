@@ -7,13 +7,19 @@
             <img src="/src/assets/img/about-image.jpg" alt="About Us" class="rounded-lg shadow-xl w-full h-[400px] object-cover" />
           </div>
           <div class="lg:w-1/2">
-            <span class="text-yellow-500 font-medium mb-2 block">WHO WE ARE</span>
-            <h2 class="text-4xl font-bold mb-6">About Our Company</h2>
+            <!-- <span class="text-yellow-500 font-medium mb-2 block">WHO WE ARE</span> -->
+            <h2 class="text-4xl font-bold mb-6">Descripción del programa</h2>
             <p class="text-gray-600 mb-4">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+              Italpuntos es la plataforma donde podrás acumular y cumplir tus
+              sueños personales mientras ayudas a tus clientes Cerámica Italia a
+              construir el espacio de tus sueños.
             </p>
             <p class="text-gray-600 mb-8">
-              Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur
+              Aquí cada venta suma y éstas te ayudarán a crear experiencias
+              memorables para que las puedas disfrutar con tu familia.
+            </p>
+            <p class="text-gray-600 mb-8">
+              Regístrate y empieza a acumular tus puntos hoy mismo
             </p>
             <button class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg transition-colors">
               CONTACT US
@@ -29,11 +35,16 @@
                 <path d="M18 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2zM9 16H7v-2h2v2zm0-4H7v-2h2v2zm0-4H7V6h2v2zm8 8h-6v-2h6v2zm0-4h-6v-2h6v2zm0-4h-6V6h6v2z"/>
               </svg>
             </div>
-            <h3 class="text-xl font-bold mb-3">Free Mobile App</h3>
+            <h3 class="text-xl font-bold mb-3">Regístrate</h3>
             <p class="text-gray-600">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laud.
+              ¿Perteneces a Es Club,
+              Supermaestros O Italparther
+              de Cerámica Italia?
+              ¡Regístrate ahora y haz que
+              cada una de tus compras
+              sume para crear tus
+              experiencias memorables!
             </p>
-            <a href="#" class="text-green-500 hover:text-green-600 inline-block mt-4">LEARN MORE</a>
           </div>
   
           <div class="text-center">
@@ -42,11 +53,19 @@
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.88-11.71L10 14.17l-1.88-1.88a.996.996 0 10-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 10-1.41-1.41z"/>
               </svg>
             </div>
-            <h3 class="text-xl font-bold mb-3">100% Cashback</h3>
+            <h3 class="text-xl font-bold mb-3">Acumula</h3>
             <p class="text-gray-600">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laud.
+              A partir de la aprobación de tu
+              registro, todas las compras
+              que realices en nuestros
+              puntos de fábrica y/o canales
+              digitales de Cerámica Italia te
+              ayudarán a acumular puntos.
+              Las reglas de acumulación
+              dependen de tu plan*
+              ¡Revísala con tu asesor de
+              confianza!
             </p>
-            <a href="#" class="text-green-500 hover:text-green-600 inline-block mt-4">LEARN MORE</a>
           </div>
   
           <div class="text-center">
@@ -55,12 +74,20 @@
                 <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
               </svg>
             </div>
-            <h3 class="text-xl font-bold mb-3">Excellent Support</h3>
+            <h3 class="text-xl font-bold mb-3">Redime</h3>
             <p class="text-gray-600">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laud.
+              Luego de que tus puntos
+              estén cargados en el sistema
+              ¡Redimir es muy fácil!
+              Ingresa a nuestro sitio web
+              italpuntos, revisa el catálogo
+              de beneficios que tenemos
+              disponible para ti, selecciona
+              el que más te guste y listo!
+              ¡Recuerda, cada compra
+              suma!
             </p>
-            <a href="#" class="text-green-500 hover:text-green-600 inline-block mt-4">LEARN MORE</a>
-          </div>
+           </div>
         </div>
       </div>
     </section>
