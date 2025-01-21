@@ -4,7 +4,7 @@
         <!-- Header y Contenido Principal -->
         <div class="flex flex-col lg:flex-row gap-12">
           <div class="lg:w-1/2">
-            <img src="/src/assets/img/about-image.jpg" alt="About Us" class="rounded-lg shadow-xl w-full h-[400px] object-cover" />
+            <img src="/src/assets/img/home2.jpg" alt="About Us" class="rounded-lg shadow-xl w-full h-[400px] object-cover" />
           </div>
           <div class="lg:w-1/2">
             <!-- <span class="text-yellow-500 font-medium mb-2 block">WHO WE ARE</span> -->
