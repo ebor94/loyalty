@@ -16,8 +16,11 @@ export const useStoreStore = defineStore('store', () => {
  async function fetchStores() {
    loading.value = true
    try {
-     const response = await fetch('https://www.freetestapi.com/api/v1/animals?limit=10')
-     stores.value = await response.json()
+   
+    
+     const response = await fetch("https://lilix.ceramicaitalia.com:3001/clientes/italpuntos/CuponList", {method: "POST", redirect: "follow"})
+     let  brands = await response.json();
+     stores.value = brands.data.data ;
    } catch (e) {
      error.value = 'Error loading stores'
    } finally {

@@ -18,7 +18,7 @@
         <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           <div v-for="store in stores" :key="store.id" 
                class="bg-white border rounded-lg p-6 flex items-center justify-center hover:shadow-lg transition-shadow">
-            <img :src="store.image" :alt="store.name" class="max-h-16" />
+            <img :src="store.logoWallet" :alt="store.empresa" class="max-h-16" />
           </div>
         </div>
 
