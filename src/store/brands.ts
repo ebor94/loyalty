@@ -4,8 +4,8 @@ import { ref } from 'vue'
 
 interface Store {
  id: number
- name: string
- image: string
+ empresa: string
+ logoWallet: string
 }
 
 export const useStoreStore = defineStore('store', () => {
