@@ -3,6 +3,8 @@ import ProfessionalConfirmation from '../views/ProfessionalConfirmation.vue'
 import ClientConfirmation from '../views/ClientConfirmation.vue'
 import ProfessionalDashboard from '../views/ProfessionalDashboard.vue'
 import Home from '../views/Home.vue'
+import Regsitro from '../views/Regsitro.vue'
+
 
 const routes = [
   {
@@ -21,6 +23,10 @@ const routes = [
   {
     path: '/dash-professional/:id',
     component: ProfessionalDashboard
+  },
+  {
+    path: '/registro',
+    component: Regsitro
   }
 ]
 
