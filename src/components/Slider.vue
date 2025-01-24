@@ -4,7 +4,7 @@
     <!-- Imagen de fondo con overlay -->
     <div class="absolute inset-0">
       <img 
-        src="/src/assets/img/pagina-home.jpg" 
+       :src="pathSlider"
         alt="Hero background" 
         class="w-full h-full object-cover opacity-50"
       />
@@ -46,15 +46,18 @@
   </div>
 </template>
 
-<script setup lang="ts">
-// Si necesitas agregar lógica para múltiples slides
+<script lang="ts" setup>
+
+interface Props {
+  pathSlider: string
+}
+
+withDefaults(defineProps<Props>(), {
+  pathSlider: ''
+})
+
 </script>
 
-<script lang="ts">
-export default {
-  name: 'HeroSlider'
-}
-</script>
 
 <style scoped>
 /* Estilos adicionales si son necesarios */
