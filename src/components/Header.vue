@@ -24,10 +24,8 @@
   </header>
  </template>
   
-  <script  lang="ts" setup>
-  import { ref } from 'vue'
-  
-  const searchType = ref('tipo1')
+  <script  setup>
+
 
  </script>
 
