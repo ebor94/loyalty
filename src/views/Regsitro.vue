@@ -1,13 +1,15 @@
 <template>
+    <div>
      <TopBar />
       <Header></Header>
       <SlideRegistro></SlideRegistro>
-      <Registro></Registro>
-      
+      <Registro></Registro>      
       <Footer></Footer>
+    </div>
 </template>
 <script setup lang="ts">
     import TopBar from '../components/TopBar.vue'
+ //@ts-ignore
     import Header from '../components/Header.vue'
     import SlideRegistro from '../components/SlideRegistro.vue'
     //@ts-ignore

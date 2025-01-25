@@ -57,6 +57,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { cliente } from '../service/clientes'
+import { Message } from '../service/mensajeria'
 
 interface FormData {
     cedula: string
@@ -64,10 +65,9 @@ interface FormData {
     email: string
     telefono: string
     rol: string
-    password: string
-    confirmPassword: string
     acceptTerms: boolean
-    direccion: string
+    direccion: string,
+    fechaRegistro : Date
 }
 
 const showForm = ref(false)
@@ -80,10 +80,10 @@ const formData = reactive<FormData>({
     email: '',
     telefono: '',
     rol: '',
-    password: '',
-    confirmPassword: '',
     acceptTerms: false,
     direccion: '',
+    fechaRegistro : new Date()
+
 })
 
 const verificarCedula = async () => {
@@ -122,9 +122,15 @@ const handleSubmit = async () => {
     }
 
     try {
-       
+        isLoading.value = true;        
+        const response = await Message.sendNotificationGoogle(formData , true);
+        console.log(response)
+        response.statusCode == 200 ?  isLoading.value = false  : isLoading.value = true
     } catch (error) {
-
-    }
+        console.error('Error al registrar cliente:', error)
+       
+    } finally {
+        isLoading.value = false       
+    } 
 }
 </script>
