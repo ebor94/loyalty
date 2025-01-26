@@ -38,12 +38,12 @@ export const Message = {
     }
   },
 
-  async SendSms(numberPhone : number, message : string): Promise<any> {
+  async SendSms(numberPhone : string, message : string): Promise<any> {
     try {
-      const raw = JSON.stringify({
-        numberPhone,
-        message
-      });
+      const raw = {
+        phoneNumber : numberPhone,
+        message : message
+      }
 
       const response = await axios({
         method: "post",
@@ -52,10 +52,10 @@ export const Message = {
         headers: {
           "Content-Type": "application/json",
         },
-        data: raw,
+        data: JSON.stringify(raw),
       });
 
-      return response.data;
+      return response.data.data;
     } catch (error) {
       console.log(error);
       return null;
