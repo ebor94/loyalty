@@ -14,15 +14,21 @@
             class="h-16"
           />
           
-          <button class="bg-white hover:bg-gray-100 text-red-800 px-8 py-3 rounded-lg font-semibold transition-colors">
+          <button
+           @click="handleRegistro"
+           class="bg-white hover:bg-gray-100 text-red-800 px-8 py-3 rounded-lg font-semibold transition-colors">
             ¡Registrarme ahora!
           </button>
         </div>
       </div>
     </section>
    </template>
-  <script lang="ts">
-  export default {
-    name: 'CallToAction'
-  }
+  <script lang="ts" setup>
+  import { Ref } from 'vue';
+  import router from '../router';
+  const handleRegistro = () => {
+    router.push('/registro');    
+  };
+
+
   </script>
