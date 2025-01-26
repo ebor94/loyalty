@@ -67,7 +67,7 @@ interface FormData {
     rol: string
     acceptTerms: boolean
     direccion: string,
-    fechaRegistro : Date
+    fechaRegistro: Date
 }
 
 const showForm = ref(false)
@@ -82,7 +82,7 @@ const formData = reactive<FormData>({
     rol: '',
     acceptTerms: false,
     direccion: '',
-    fechaRegistro : new Date()
+    fechaRegistro: new Date()
 
 })
 
@@ -91,11 +91,11 @@ const verificarCedula = async () => {
 
     try {
         isLoading.value = true
-        const infoCliente =  await cliente.getCliente(formData.cedula)
+        const infoCliente = await cliente.getCliente(formData.cedula)
         console.log(infoCliente.data)
-        if (infoCliente.data[0].stcd1 == formData.cedula ) { 
-            formData.nombre = infoCliente.data[0].mcod1;  
-            formData.email = infoCliente.data[0].psoo1 ;
+        if (infoCliente.data[0].stcd1 == formData.cedula) {
+            formData.nombre = infoCliente.data[0].mcod1;
+            formData.email = infoCliente.data[0].psoo1;
             formData.telefono = infoCliente.data[0].telf1
             formData.direccion = infoCliente.data[0].stras
             formData.rol = infoCliente.data[0].anred
@@ -106,7 +106,7 @@ const verificarCedula = async () => {
             isLoading.value = false
             isExistingUser.value = false
         }
-      
+
 
     } catch (error) {
         console.error('Error al verificar cédula:', error)
@@ -115,22 +115,38 @@ const verificarCedula = async () => {
     }
 }
 
+const sendMessage = async () => {
+        try {
+            isLoading.value = true
+            const response = await Message.SendSms(formData.telefono, `Hola ${formData.nombre}, bienvenido a Italpuntos de ceramica italia`)
+            return (response)
+        } catch (error) {
+           return (error)
+        } finally {
+            isLoading.value = false
+        }
+    }
+
 const handleSubmit = async () => {
     if (!formData.acceptTerms) {
         alert('Debes aceptar los términos y condiciones')
         return
     }
-
     try {
-        isLoading.value = true;        
-        const response = await Message.sendNotificationGoogle(formData , true);
+        const resultsms  = await sendMessage()           
+        isLoading.value = true;
+        let typeMessage =  false;
+        resultsms.resultCode == "0" ? typeMessage = true  : typeMessage =  false
+        const response = await Message.sendNotificationGoogle(formData, typeMessage);
         console.log(response)
-        response.statusCode == 200 ?  isLoading.value = false  : isLoading.value = true
+        response.statusCode == 200 ? isLoading.value = false : isLoading.value = true
     } catch (error) {
         console.error('Error al registrar cliente:', error)
-       
+
     } finally {
-        isLoading.value = false       
-    } 
+        isLoading.value = false
+    }
+
+
 }
 </script>
