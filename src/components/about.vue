@@ -21,8 +21,8 @@
             <p class="text-gray-600 mb-8">
               Regístrate y empieza a acumular tus puntos hoy mismo
             </p>
-            <button class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg transition-colors">
-              CONTACT US
+            <button @click="handleRegistro" class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg transition-colors">
+              Registrate!
             </button>
           </div>
         </div>
@@ -93,8 +93,10 @@
     </section>
   </template>
   
-  <script lang="ts">
-  export default {
-    name: 'AboutSection'
-  }
+  <script lang="ts" setup>
+    import router from '../router';
+  const handleRegistro = () => {
+    router.push('/registro');    
+  };
+
   </script>
