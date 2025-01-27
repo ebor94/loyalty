@@ -5,7 +5,7 @@
             <div class="flex flex-col md:flex-row">
                 <div class="w-full md:w-1/2 p-8">
                     <h2 class="text-2xl font-bold mb-2">Registrate ahora</h2>
-                    <p class="mb-6">O inicia sesión <a href="#" class="text-blue-600 hover:underline">aquí</a></p>
+                    <p class="mb-6">Ya perteneces a italpuntos?....inicia sesión  <button @click="emitirMostrarLogin" href="#" class="text-blue-600 hover:underline">aquí</button></p>
 
                     <form @submit.prevent="handleSubmit" class="space-y-4">
                         <div class="flex space-x-2">
@@ -58,6 +58,14 @@
 import { reactive, ref } from 'vue'
 import { cliente } from '../service/clientes'
 import { Message } from '../service/mensajeria'
+
+const emit = defineEmits<{
+  (e: 'mostrarLogin'): void;
+}>();
+
+const emitirMostrarLogin = () => {
+  emit('mostrarLogin');
+};
 
 interface FormData {
     cedula: string
