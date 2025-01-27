@@ -1,6 +1,6 @@
 <template>
     <div>
-      <TopBar />
+      <TopBar  @mostrarLogin="toggleMostrarLogin" />
       <Header></Header>
       <Slider pathSlider="./src/assets/img/pagina-home.jpg"></Slider>
       <HeroSlider />
@@ -31,4 +31,14 @@
     // @ts-ignore
   import Testimonial from '../components/Testimonial.vue'
   import Footer from '../components/Footer.vue'
+  import {ref} from 'vue';
+
+  const mostrarLogin = ref(false);
+const mostrarRegistro = ref(false);
+const toggleMostrarLogin = () => {
+  mostrarLogin.value = !mostrarLogin.value;
+  mostrarRegistro.value = false; // Ocultar registro si se muestra login
+
+};
+
  </script>
