@@ -48,8 +48,10 @@
 import { reactive, ref } from 'vue'
 import { cliente } from '../service/clientes'
 import { Message } from '../service/mensajeria'
+ import { useRouter } from 'vue-router'
 // @ts-ignore
 import Modal from './Modal.vue'
+const router = useRouter()
 const showModal = ref(false);
 const messageModal = ref('mensaje');
 const titleModal = ref('titulo');
@@ -99,10 +101,10 @@ const verificarToken = async () =>{
         titleModal.value = 'Error';
         return
     }
-    if (formData.token ==formData.tokenIn) {    
-        showModal.value = true;
-        messageModal.value = 'Bienvenido';
-        titleModal.value = 'Exito';
+    if (formData.token ==formData.tokenIn) {  
+        //aca debe ir a solicitar el token de sesion 
+        //debe ir a consultar la informacion del cliente y almacenarla en el store  
+        router.push('/store')
     } else {
         showModal.value = true;
         messageModal.value = 'El token es incorrecto';
