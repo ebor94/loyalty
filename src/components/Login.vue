@@ -128,7 +128,7 @@ const verificarCedula = async () => {
 
     try {
         isLoading.value = true
-        const infoCliente = await cliente.getCliente(formData.cedula);
+        const infoCliente = await cliente.getCliente(formData.cedula);      
         if (infoCliente.data == null) {
             showModal.value = true;
             messageModal.value = 'El número de cédula no existe en la base de datos';
@@ -136,7 +136,7 @@ const verificarCedula = async () => {
             formData.cedula = '';
             return
         }
-
+    
         if (infoCliente.data[0].stcd1 == formData.cedula) {
             formData.telIncryp = infoCliente.data[0].telf1;
             formData.token = generateToken();
