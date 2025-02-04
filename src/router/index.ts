@@ -4,6 +4,8 @@ import ClientConfirmation from '../views/ClientConfirmation.vue'
 import ProfessionalDashboard from '../views/ProfessionalDashboard.vue'
 import Home from '../views/Home.vue'
 import Regsitro from '../views/Regsitro.vue'
+import Store from '../views/Store.vue'
+import StoreDetail from '../views/StoreDetail.vue'
 
 
 const routes = [
@@ -27,6 +29,17 @@ const routes = [
   {
     path: '/registro',
     component: Regsitro
+  },
+  {
+    path: '/store',
+    component: Store
+  }
+  ,
+  {
+    path: '/store/:id',
+    name: 'store-detail',
+    component: StoreDetail,
+    props: true // Esto permite pasar el id como prop al componente
   }
 ]
 
