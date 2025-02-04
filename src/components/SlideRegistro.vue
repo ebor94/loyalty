@@ -12,7 +12,7 @@
         <!-- Texto -->
         <div class="w-full lg:w-1/3 text-center lg:text-left">
           <h2 class="text-3xl md:text-5xl font-bold text-white leading-tight">
-           Registro       
+           {{Titulo}}      
           </h2>
         </div>        
       </div>
@@ -21,5 +21,13 @@
 </template>
 
 <script lang="ts" setup>
+
+interface Props {
+  Titulo: string
+}
+
+withDefaults(defineProps<Props>(), {
+  Titulo: 'Registro'
+})
 
 </script>
