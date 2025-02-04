@@ -1,0 +1,257 @@
+<template>
+    <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <!-- TopBar y Header -->
+        <TopBar @mostrarLogin="toggleMostrarLogin" />
+        <Header />
+
+        <!-- Loading State -->
+        <div v-if="loading" class="container mx-auto px-4 py-8">
+            <div class="animate-pulse space-y-8">
+                <!-- Skeleton para el header de la tienda -->
+                <div class="flex flex-col md:flex-row items-center gap-6 bg-white p-8 rounded-xl shadow-sm">
+                    <div class="w-32 h-32 md:w-40 md:h-40 bg-gray-200 rounded-xl"></div>
+                    <div class="flex-1 space-y-4">
+                        <div class="h-8 bg-gray-200 rounded w-3/4"></div>
+                        <div class="h-4 bg-gray-200 rounded w-full"></div>
+                        <div class="h-6 bg-gray-200 rounded w-1/4"></div>
+                    </div>
+                </div>
+                <!-- Skeleton para los productos -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div v-for="i in 3" :key="i" class="h-48 bg-gray-200 rounded-xl shadow-sm"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div v-else-if="error" class="container mx-auto px-4 py-8">
+            <div class="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg text-center">
+                {{ error }}
+            </div>
+        </div>
+
+        <!-- Content -->
+        <template v-else-if="storeData">
+            <!-- Header de la tienda -->
+            <div class="bg-white shadow-sm">
+                <div class="container mx-auto px-4 py-8">
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <div class="w-32 h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-lg">
+                            <img 
+                                :src="storeData.info.logoWallet" 
+                                :alt="storeData.info.empresa"
+                                class="w-full h-full object-cover bg-white"
+                                @error="handleImageError"
+                            />
+                        </div>
+                        <div class="flex-1 text-center md:text-left">
+                            <h1 class="text-4xl font-bold text-gray-900 mb-2">
+                                {{ storeData.info.empresa }}
+                            </h1>
+                            <p class="text-gray-600 mb-4">{{ storeData.info.descripcion }}</p>
+                            <span class="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                                {{ storeData.info.categoria }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenido principal -->
+            <div class="container mx-auto px-4 py-12">
+                <!-- Grid de productos -->
+                <div v-if="availableStocks.length > 0">
+                    <h2 class="text-3xl font-semibold text-gray-900 mb-8">Gift Cards Disponibles</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div 
+                            v-for="stock in availableStocks" 
+                            :key="stock.valor"
+                            class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+                        >
+                            <div class="p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 class="text-2xl font-bold text-gray-900">
+                                            {{ formatCurrency(stock.valor) }}
+                                        </h3>
+                                        <p class="text-sm text-gray-500">Gift Card</p>
+                                        <p class="text-sm text-gray-500">Redímela por un total de XXXXX Italpuntos</p>
+                                    </div>
+                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded-full">
+                                        Disponible
+                                    </span>
+                                </div>
+                                <button 
+                                    class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                                    @click="handlePurchase(stock)"
+                                >
+                                    Redimir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty State para stocks -->
+                <div v-else class="text-center py-8">
+                    <p class="text-gray-600">No hay gift cards disponibles en este momento.</p>
+                </div>
+
+                <!-- Términos y condiciones -->
+                <div class="mt-16">
+                    <h2 class="text-3xl font-semibold text-gray-900 mb-6">Términos y Condiciones</h2>
+                    <div 
+                        class="bg-white rounded-xl shadow p-6 prose max-w-none"
+                        v-html="storeData.info.condicionesHTML"
+                    ></div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Footer -->
+        <Footer />
+    </div>
+</template>
+
+<script lang="ts" setup>
+import { ref, onMounted, computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { Cupon } from '../service/cupon';
+//@ts-ignore
+import Header from '../components/Header.vue';
+//@ts-ignore
+import TopBar from '../components/TopBar.vue';
+import Footer from '../components/Footer.vue';
+
+const mostrarLogin = ref(false);
+const mostrarRegistro = ref(false);
+
+const toggleMostrarLogin = () => {
+    mostrarLogin.value = !mostrarLogin.value;
+    mostrarRegistro.value = false;
+};
+const route = useRoute();
+const router = useRouter();
+interface Stock {
+    valor: number;
+    stock: boolean;
+}
+
+interface StoreInfo {
+    _id: string;
+    id: number;
+    empresa: string;
+    giftcard: string;
+    condicionesHTML: string;
+    condicionesPlana: string;
+    imagenGiftcardPNG: string;
+    imagenGiftcardJPG: string;
+    descripcion: string;
+    logoWallet: string;
+    categoria: string;
+    activo: number;
+}
+
+interface StoreResponse {
+    status: string;
+    code: string;
+    info: StoreInfo;
+    stocks: Stock[];
+}
+
+
+// Estado
+const storeData = ref<StoreResponse | null>(null);
+const loading = ref<boolean>(true);
+const error = ref<string | null>(null);
+
+// Computed properties
+const availableStocks = computed<Stock[]>(() => {
+    return storeData.value?.stocks.filter(stock => stock.stock) || [];
+});
+
+// Utilidades
+const formatCurrency = (value: number): string => {
+    return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(value);
+};
+
+const handleImageError = (event: Event): void => {
+    const img = event.target as HTMLImageElement;
+    img.src = '/path-to-fallback-image.jpg';
+};
+
+const handlePurchase = async (stock: Stock): Promise<void> => {
+    try {
+        if (!storeData.value) return;
+        
+        console.log('Iniciando compra:', {
+            storeId: storeData.value.info.id,
+            valor: stock.valor,
+            empresa: storeData.value.info.empresa
+        });
+        
+        // Aquí implementarías la navegación a la página de compra o el modal
+        router.push({
+            name: 'purchase',
+            params: {
+                storeId: storeData.value.info.id,
+                amount: stock.valor
+            }
+        });
+    } catch (err) {
+        console.error('Error al procesar la compra:', err);
+    }
+};
+
+// Cargar datos
+const fetchStoreData = async (): Promise<void> => {
+    try {
+        loading.value = true;
+        error.value = null;
+        
+        const response = await Cupon.getGifCard(route.params.id as string);
+        
+        if (!response) {
+            throw new Error('No se pudo obtener la información de la tienda');
+        }
+        console.log(response)
+
+        if (response.success) {
+            storeData.value = response.data;
+        } else {
+            throw new Error(response.message || 'Error al cargar los datos');
+        }
+    } catch (err) {
+        error.value = err instanceof Error 
+            ? err.message 
+            : 'Error al cargar los datos de la tienda';
+      
+    } finally {
+        loading.value = false;
+    }
+};
+
+// Lifecycle
+onMounted(() => {
+    fetchStoreData();
+});
+</script>
+
+<style scoped>
+.transition-all {
+    transition: all 0.3s ease-in-out;
+}
+
+:deep(.prose) {
+    @apply text-gray-600;
+}
+
+:deep(.prose p) {
+    @apply mb-4;
+}
+</style>
