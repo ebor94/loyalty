@@ -1,4 +1,5 @@
 <template>
+  <div>
   <header class="bg-white py-4 shadow-sm">
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex items-center justify-between">
@@ -22,9 +23,13 @@
       </div>
     </div>
   </header>
+  <Menu ></Menu>
+</div>
  </template>
   
   <script  setup>
+import Menu from './Menu.vue';
+
 
 
  </script>
