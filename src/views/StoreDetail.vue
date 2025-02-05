@@ -37,20 +37,18 @@
                 <div class="container mx-auto px-4 py-8">
                     <div class="flex flex-col md:flex-row items-center gap-6">
                         <div class="w-32 h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-lg">
-                            <img 
-                                :src="storeData.info.logoWallet" 
-                                :alt="storeData.info.empresa"
-                                class="w-full h-full object-cover bg-white"
-                                @error="handleImageError"
-                            />
+                            <img :src="storeData.info.logoWallet" :alt="storeData.info.empresa"
+                                class="w-full h-full object-cover bg-white" @error="handleImageError" />
                         </div>
                         <div class="flex-1 text-center md:text-left">
                             <h1 class="text-4xl font-bold text-gray-900 mb-2">
                                 {{ storeData.info.empresa }}
                             </h1>
                             <p class="text-gray-600 mb-4">{{ storeData.info.descripcion }}</p>
-                            <span class="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                            <span
+                                class="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
                                 {{ storeData.info.categoria }}
+                        
                             </span>
                         </div>
                     </div>
@@ -63,11 +61,19 @@
                 <div v-if="availableStocks.length > 0">
                     <h2 class="text-3xl font-semibold text-gray-900 mb-8">Gift Cards Disponibles</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div 
-                            v-for="stock in availableStocks" 
-                            :key="stock.valor"
-                            class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
-                        >
+                        <div v-for="stock in availableStocks" :key="stock.valor"
+                            class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                            <div class="relative">
+                                <!-- Imagen de fondo -->
+                                <img 
+                                    :src="stock.randomImage"
+                                    :alt="`Gift Card ${formatCurrency(stock.valor)}`"
+                                    class="w-full h-48 object-cover rounded-t-xl"
+                                    @error="handleImageError"
+                                />
+                                <!-- Overlay con gradiente -->
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-t-xl"></div>
+                            </div>
                             <div class="p-6">
                                 <div class="flex items-center justify-between mb-4">
                                     <div>
@@ -77,14 +83,14 @@
                                         <p class="text-sm text-gray-500">Gift Card</p>
                                         <p class="text-sm text-gray-500">Redímela por un total de XXXXX Italpuntos</p>
                                     </div>
-                                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded-full">
+                                    <span
+                                        class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded-full">
                                         Disponible
                                     </span>
                                 </div>
-                                <button 
+                                <button
                                     class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
-                                    @click="handlePurchase(stock)"
-                                >
+                                    @click="handlePurchase(stock)">
                                     Redimir
                                 </button>
                             </div>
@@ -100,10 +106,8 @@
                 <!-- Términos y condiciones -->
                 <div class="mt-16">
                     <h2 class="text-3xl font-semibold text-gray-900 mb-6">Términos y Condiciones</h2>
-                    <div 
-                        class="bg-white rounded-xl shadow p-6 prose max-w-none"
-                        v-html="storeData.info.condicionesHTML"
-                    ></div>
+                    <div class="bg-white rounded-xl shadow p-6 prose max-w-none"
+                        v-html="storeData.info.condicionesHTML"></div>
                 </div>
             </div>
         </template>
@@ -135,6 +139,7 @@ const router = useRouter();
 interface Stock {
     valor: number;
     stock: boolean;
+    randomImage?: string;
 }
 
 interface StoreInfo {
@@ -188,13 +193,13 @@ const handleImageError = (event: Event): void => {
 const handlePurchase = async (stock: Stock): Promise<void> => {
     try {
         if (!storeData.value) return;
-        
+
         console.log('Iniciando compra:', {
             storeId: storeData.value.info.id,
             valor: stock.valor,
             empresa: storeData.value.info.empresa
         });
-        
+
         // Aquí implementarías la navegación a la página de compra o el modal
         router.push({
             name: 'purchase',
@@ -213,28 +218,54 @@ const fetchStoreData = async (): Promise<void> => {
     try {
         loading.value = true;
         error.value = null;
-        
+
         const response = await Cupon.getGifCard(route.params.id as string);
-        
+
         if (!response) {
             throw new Error('No se pudo obtener la información de la tienda');
         }
         console.log(response)
 
         if (response.success) {
+            // Asignar imágenes aleatorias a cada stock
+            if (response.data.stocks) {
+                // Usamos Promise.all para manejar todas las promesas de imágenes
+                const stocksWithImages = await Promise.all(
+                    response.data.stocks.map(async (stock : any) => {
+                        const randomImage = await getImagesForCategory(response.data.info.categoria);
+                        return {
+                            ...stock,
+                            randomImage
+                        };
+                    })
+                );
+                
+                response.data.stocks = stocksWithImages;
+            }
             storeData.value = response.data;
         } else {
             throw new Error(response.message || 'Error al cargar los datos');
         }
     } catch (err) {
-        error.value = err instanceof Error 
-            ? err.message 
+        error.value = err instanceof Error
+            ? err.message
             : 'Error al cargar los datos de la tienda';
-      
+
     } finally {
         loading.value = false;
     }
 };
+
+const getImagesForCategory = async (category: string): Promise<string> => {
+    const ImagenRandom = Math.floor(Math.random() * 6) + 1;
+    let imgcupon = await Cupon.getImg(ImagenRandom, category);
+    
+    return imgcupon === 500 
+        ? `https://web.ceramicaitalia.com/temporada/italpuntos/${category}/1.jpg`
+        : `https://web.ceramicaitalia.com/temporada/italpuntos/${category}/${ImagenRandom}.jpg`;
+}
+
+
 
 // Lifecycle
 onMounted(() => {
