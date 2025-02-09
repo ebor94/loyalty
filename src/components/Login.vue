@@ -48,6 +48,7 @@
 import { reactive, ref } from 'vue'
 import { cliente } from '../service/clientes'
 import { Message } from '../service/mensajeria'
+import { useUserStore } from '../store/user'
  import { useRouter } from 'vue-router'
 // @ts-ignore
 import Modal from './Modal.vue'
@@ -55,6 +56,7 @@ const router = useRouter()
 const showModal = ref(false);
 const messageModal = ref('mensaje');
 const titleModal = ref('titulo');
+const UserStore = useUserStore();
 
 interface FormData {
     cedula: string
@@ -101,10 +103,10 @@ const verificarToken = async () =>{
         titleModal.value = 'Error';
         return
     }
-    if (formData.token ==formData.tokenIn) {  
-        //aca debe ir a solicitar el token de sesion 
-        //debe ir a consultar la informacion del cliente y almacenarla en el store  
-        router.push('/store')
+    if (formData.token ==formData.tokenIn) {            
+        const sessionToken = await cliente.getTokenSession(UserStore.userCode,UserStore.bpCode);
+        UserStore.setToken(formData.token,  sessionToken.tokenSesion)
+       router.push('/store')
     } else {
         showModal.value = true;
         messageModal.value = 'El token es incorrecto';
@@ -140,6 +142,8 @@ const verificarCedula = async () => {
         if (infoCliente.data[0].stcd1 == formData.cedula) {
             formData.telIncryp = infoCliente.data[0].telf1;
             formData.token = generateToken();
+            UserStore.saveUser(infoCliente.data[0].name1, infoCliente.data[0].stcd1 , infoCliente.data[0].kunnr );
+           
             try {
                 const resultsms = await sendMessage(formData.telIncryp, `ingresa este token  ${formData.token}, para el inicio de sesión Italpuntos`);
                 formData.telefono = `${formData.telIncryp.substring(0, 3)}.......${formData.telIncryp.substring(formData.telIncryp.length - 3)}`
