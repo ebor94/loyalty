@@ -148,6 +148,8 @@ const handleSubmit = async () => {
         const response = await Message.sendNotificationGoogle(formData, typeMessage);
         console.log(response)
         response.statusCode == 200 ? isLoading.value = false : isLoading.value = true
+        emitirMostrarLogin();
+
     } catch (error) {
         console.error('Error al registrar cliente:', error)
 
