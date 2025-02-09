@@ -20,5 +20,26 @@ export const cliente = {
       console.log(error);
       return null;
     }
+  },
+
+  async getTokenSession(userCode: string | null ,bpCode : string | null): Promise<any> {
+    try {
+      const  response = await axios({
+        method: "post",
+        maxBodyLength: Infinity,
+        url: `${domain}/auth/login/italpuntos/`,
+        headers: {
+          "Content-Type": "application/json",
+      
+        },
+        data: JSON.stringify({ userCode, bpCode })
+
+      })
+
+      return response.data;
+      
+    } catch (error) {
+      return 500;
+    }
   }
 };
