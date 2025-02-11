@@ -30,10 +30,8 @@
         <!-- Características -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
           <div class="text-center">
-            <div class="text-yellow-500 mb-4">
-              <svg class="w-12 h-12 mx-auto" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M18 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2zM9 16H7v-2h2v2zm0-4H7v-2h2v2zm0-4H7V6h2v2zm8 8h-6v-2h6v2zm0-4h-6v-2h6v2zm0-4h-6V6h6v2z"/>
-              </svg>
+            <div class="flex justify-center items-center mb-4">
+              <img src="https://web.ceramicaitalia.com/temporada/italpuntos/registro.png">
             </div>
             <h3 class="text-xl font-bold mb-3">Regístrate</h3>
             <p class="text-gray-600">
@@ -48,10 +46,8 @@
           </div>
   
           <div class="text-center">
-            <div class="text-yellow-500 mb-4">
-              <svg class="w-12 h-12 mx-auto" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.88-11.71L10 14.17l-1.88-1.88a.996.996 0 10-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 10-1.41-1.41z"/>
-              </svg>
+            <div class="flex justify-center items-center mb-4">
+              <img src="https://web.ceramicaitalia.com/temporada/italpuntos/Acumula.png">
             </div>
             <h3 class="text-xl font-bold mb-3">Acumula</h3>
             <p class="text-gray-600">
@@ -69,10 +65,8 @@
           </div>
   
           <div class="text-center">
-            <div class="text-yellow-500 mb-4">
-              <svg class="w-12 h-12 mx-auto" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
-              </svg>
+            <div class="flex justify-center items-center mb-4">
+              <img src="https://web.ceramicaitalia.com/temporada/italpuntos/redime.png">
             </div>
             <h3 class="text-xl font-bold mb-3">Redime</h3>
             <p class="text-gray-600">
