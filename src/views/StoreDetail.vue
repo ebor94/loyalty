@@ -121,6 +121,8 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Cupon } from '../service/cupon';
+import { useUserStore } from '../store/user';
+import { useStoreGiftcard } from '../store/gifCard';
 //@ts-ignore
 import Header from '../components/Header.vue';
 //@ts-ignore
@@ -129,6 +131,8 @@ import Footer from '../components/Footer.vue';
 
 const mostrarLogin = ref(false);
 const mostrarRegistro = ref(false);
+const userData = useUserStore();
+const giftCard = useStoreGiftcard();
 
 const toggleMostrarLogin = () => {
     mostrarLogin.value = !mostrarLogin.value;
@@ -143,8 +147,7 @@ interface Stock {
 }
 
 interface StoreInfo {
-    _id: string;
-    id: number;
+    id: string;    
     empresa: string;
     giftcard: string;
     condicionesHTML: string;
@@ -192,28 +195,21 @@ const handleImageError = (event: Event): void => {
 
 const handlePurchase = async (stock: Stock): Promise<void> => {
     try {
+        // validar puntos disponibles antes de solicitar redencion 
         if (!storeData.value) return;
-
-        console.log('Iniciando compra:', {
-            storeId: storeData.value.info.id,
-            valor: stock.valor,
-            empresa: storeData.value.info.empresa
-        });
-
-        // Aquí implementarías la navegación a la página de compra o el modal
-        router.push({
-            name: 'purchase',
-            params: {
-                storeId: storeData.value.info.id,
-                amount: stock.valor
-            }
-        });
+        const buyGif = await Cupon.buyGifcard( `${storeData.value.info.id}`, userData.userCode, userData.bpCode, userData.userName, stock.valor );
+        if(!buyGif.success){
+            return
+        };
+        giftCard.saveGiftcard(buyGif.data.clave,buyGif.data.codigo,buyGif.data.empresa,buyGif.data.fechaExpiracionTicket,buyGif.data.hashPdf,buyGif.data.idGiftcard,buyGif.data.nombreEmpresa,buyGif.data.status,buyGif.data.url,buyGif.data.userCode,buyGif.data.valor);
+        //si es exitoso actualizar los puntos disponibles 
+        //ir al componente gifcard
+        router.push('/giftcard')
     } catch (err) {
         console.error('Error al procesar la compra:', err);
     }
 };
 
-// Cargar datos
 const fetchStoreData = async (): Promise<void> => {
     try {
         loading.value = true;
