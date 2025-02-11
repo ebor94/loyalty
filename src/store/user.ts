@@ -6,6 +6,9 @@ interface UserState {
   userCode: string | null;
   bpCode: string | null;
   userName: string | null;
+  puntosAcumulados: number;
+  puntosDisponibles: number;
+  PuntosRedimidos : number;
 }
 
 export const useUserStore = defineStore('user', {
@@ -15,7 +18,11 @@ export const useUserStore = defineStore('user', {
     userCode: null,
     bpCode: null,
     userName: null,
+    puntosAcumulados : 0,
+    puntosDisponibles : 0,
+    PuntosRedimidos : 0,
   }),
+  
 
   getters: {
     isAuthenticated(state): boolean {
@@ -37,5 +44,11 @@ export const useUserStore = defineStore('user', {
       this.bpCode = bpCode;
       this.userCode = userCode;
     },
+    getDataUser(usercode: string, bpCode: string){
+
+    },
+    updateDataUser(usercode: string, bpCode: string, puntosRedimidos: number) {
+
+    }
   },
 });
