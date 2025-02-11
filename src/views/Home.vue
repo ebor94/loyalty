@@ -9,7 +9,7 @@
       <Brands />
       <LatestCupon />
       <CallToAction />
-      <Testimonial></Testimonial>
+     <!--  <Testimonial></Testimonial> -->
       <Footer></Footer>
     </div>
   </template>
