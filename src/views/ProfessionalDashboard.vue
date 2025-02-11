@@ -1,23 +1,13 @@
-// ProfessionalDashboard.vue
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <nav class="bg-white shadow-md">
-      <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <img src="../assets/logo.png" alt="Cerámica Italia" class="h-12" />
-        <div class="flex items-center gap-4">
-          <span class="text-gray-600">{{ professional.name }}</span>
-          <button class="text-gray-500 hover:text-gray-700">
-            <span class="material-icons text-md">person</span>
-          </button>
-        </div>
-      </div>
-    </nav>
+  <div>
+     <TopBar  @mostrarLogin="toggleMostrarLogin" />
+     <Header></Header>
 
     <main class="max-w-7xl mx-auto px-4 py-8">
       <!-- Métricas principales -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow p-6">
-          <h3 class="text-gray-500 text-sm mb-1">Saldo Disponible</h3>
+          <h3 class="text-gray-500 text-sm mb-1">Puntosa Disponible</h3>
           <p class="text-2xl font-bold text-green-600">{{ formatCurrency(stats.availableBalance) }}</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
@@ -31,7 +21,7 @@
       </div>
 
       <!-- Formulario de Redención -->
-      <div class="bg-white rounded-lg shadow p-6 mb-8">
+<!--       <div class="bg-white rounded-lg shadow p-6 mb-8">
         <h2 class="text-xl font-semibold mb-6">Solicitar Redención</h2>
         <div class="flex flex-col md:flex-row gap-4 items-end">
           <div class="flex-1">
@@ -51,7 +41,7 @@
             Solicitar
           </button>
         </div>
-      </div>
+      </div> -->
 
       <!-- Historial de Ventas -->
       <div class="bg-white rounded-lg shadow overflow-hidden">
@@ -115,12 +105,18 @@
         </div>
       </div>
     </main>
+    <Footer></Footer>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import axios from 'axios';
+ // @ts-ignore
+import TopBar from '../components/TopBar.vue';
+ // @ts-ignore
+import Header from '../components/Header.vue';
+import Footer from '../components/Footer.vue';
 
 interface Professional {
   id: string
@@ -241,4 +237,11 @@ const requestRedemption = async () => {
     console.error('Error al solicitar redención:', error)
   }
 }
+const mostrarLogin = ref(false);
+const mostrarRegistro = ref(false);
+const toggleMostrarLogin = () => {
+  mostrarLogin.value = !mostrarLogin.value;
+  mostrarRegistro.value = false; // Ocultar registro si se muestra login
+
+};
 </script>
