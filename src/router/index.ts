@@ -6,44 +6,78 @@ import Home from '../views/Home.vue'
 import Regsitro from '../views/Regsitro.vue'
 import Store from '../views/Store.vue'
 import StoreDetail from '../views/StoreDetail.vue'
+import {useUserStore}  from '../store/user'
+import GiftCard from '../components/GiftCard.vue'
 
 
 const routes = [
   {
     path: '/',
-    component: Home
+    component: Home,
+    meta: { requiresAuth: false }, // Ruta pública
   },
   {
     path: '/client/:id',
-    component: ClientConfirmation
+    component: ClientConfirmation,
+    meta: { requiresAuth: false }, // Ruta pública
   },
   {
     path: '/professional/:id',
-    component: ProfessionalConfirmation
+    component: ProfessionalConfirmation,
+    meta: { requiresAuth: false }, // Ruta pública
   }
   ,
   {
     path: '/dash-professional/:id',
-    component: ProfessionalDashboard
+    component: ProfessionalDashboard,
+    meta: { requiresAuth: false}, // Ruta privada
   },
   {
     path: '/registro',
-    component: Regsitro
+    name: 'registro',
+    component: Regsitro,
+    meta: { requiresAuth: false }, // Ruta pública
   },
   {
     path: '/store',
-    component: Store
+    component: Store,
+    meta: { requiresAuth: true }, // Ruta privada
   }
   ,
   {
     path: '/store/:id',
     name: 'store-detail',
     component: StoreDetail,
-    props: true // Esto permite pasar el id como prop al componente
+    props: true,
+    meta: { requiresAuth: false }, // Ruta privada
+  }
+  ,
+  {
+    path: '/giftcard/',
+    name: 'giftcard',
+    component: GiftCard,
+    props: true,
+    meta: { requiresAuth: false }, // Ruta privada
   }
 ]
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
-  routes
-})
+  routes,
+});
+
+// Guard global para proteger rutas
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore(); // Obtén la instancia del store
+
+  // Verifica si la ruta requiere autenticación
+  if (to.meta.requiresAuth && !userStore.isAuthenticated) {
+    // Si no está autenticado, redirige al login
+    next({ name: 'registro' }); // Cambia 'Home' por la ruta de login si tienes una
+  } else {
+    // Permite el acceso a la ruta
+    next();
+  }
+});
+
+export default router;
