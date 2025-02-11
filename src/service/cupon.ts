@@ -42,15 +42,19 @@ export const Cupon = {
     }
   },
 
-  async buyGifcard(idGiftcard : string , userCode : string, bpCode : string, userName : string, valorGif : number) : Promise<any>{
+  async buyGifcard(idGiftcard : string , userCode : string | null , bpCode : string | null , userName : string | null , valorGif : number) : Promise<any>{
+
+     
     try {
       let data = JSON.stringify({
-        idGiftcard: idGiftcard,
-        userCode: userCode,
-        bpCode: bpCode,
-        userName: userName,
-        valorGif: valorGif,
+        idGiftcard : idGiftcard,
+        userCode : userCode,
+        bpCode : bpCode,
+        userName : userName,
+        valorgif: valorGif,
       });
+
+      console.log(data)
 
       const response = await axios({
         method: "post",
@@ -67,6 +71,10 @@ export const Cupon = {
       return 500;
       
     }
+
+  },
+
+  async saveGiftCardBought(clave : string, codigo:string, empresa: string, fechaExpiracionTicket: string, hashPdf : string, idGiftcard: string, nombreEmpresa : string, status: string, url : string, userCode: string, valor: number,): Promise<any>{
 
   }
 };
