@@ -27,7 +27,8 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  Titulo: 'Registro'
+  Titulo: 'Registro',
+  required: false,
 })
 
 </script>
