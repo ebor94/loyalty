@@ -1,6 +1,6 @@
 // Navbar.vue
 <template>
-  <nav class="relative bg-black">
+  <nav class="relative bg-gray-900">
     <!-- Desktop Navigation -->
     <div class="container mx-auto px-4">
       <div class="flex items-center justify-between h-16">
@@ -33,14 +33,16 @@
         <div class="hidden md:flex items-center space-x-4">
           <!-- Mostrar userName si está autenticado -->
           <span v-if="userStore.isAuthenticated" class="text-white font-medium">
-            Hola, {{ userStore.userName }}
+            Hola, {{ userStore.userName }} <br>
+            <span class="text-xs font-medium text-white">Disponible : {{ userStore.puntosDisponibles }}</span>
           </span>
+          
 
           <!-- Mostrar botón "REGISTRARME" si no está autenticado -->
           <router-link
             v-else
             to="/registro"
-            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+            class="px-6 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition-colors duration-200"
           >
             REGISTRARME
           </router-link>
@@ -88,6 +90,9 @@
             class="text-sm text-white ml-2"
           >
             {{ userStore.userName }}
+            <br>
+            <span class="text-xs font-medium text-white">Disponible : {{ userStore.puntosDisponibles }}</span>
+            
           </span>
         </div>
       </div>
@@ -113,8 +118,9 @@
 
         <!-- Mobile Register Button -->
         <span v-if="userStore.isAuthenticated" class="text-white font-medium">
-          Hola, {{ userStore.userName }}
+      
         </span>
+        
 
         <!-- Mostrar botón "REGISTRARME" si no está autenticado -->
         <router-link
