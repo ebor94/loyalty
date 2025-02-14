@@ -41,6 +41,7 @@
         </div>
         <Modal v-if="showModal" :showModal="showModal" @confirm="confirmar2" @cancel="cancelar2" :title="titleModal"
             :message="messageModal"></Modal>
+            <Loader :isLoading="isLoading" />
     </div>
 </template>
 
@@ -52,6 +53,8 @@ import { useUserStore } from '../store/user'
  import { useRouter } from 'vue-router'
 // @ts-ignore
 import Modal from './Modal.vue'
+// @ts-ignore
+import Loader from './Loader.vue'
 const router = useRouter()
 const showModal = ref(false);
 const messageModal = ref('mensaje');
