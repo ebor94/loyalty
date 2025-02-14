@@ -48,7 +48,7 @@
                             <span
                                 class="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
                                 {{ storeData.info.categoria }}
-                        
+
                             </span>
                         </div>
                     </div>
@@ -65,14 +65,12 @@
                             class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                             <div class="relative">
                                 <!-- Imagen de fondo -->
-                                <img 
-                                    :src="stock.randomImage"
-                                    :alt="`Gift Card ${formatCurrency(stock.valor)}`"
-                                    class="w-full h-48 object-cover rounded-t-xl"
-                                    @error="handleImageError"
-                                />
+                                <img :src="stock.randomImage" :alt="`Gift Card ${formatCurrency(stock.valor)}`"
+                                    class="w-full h-48 object-cover rounded-t-xl" @error="handleImageError" />
                                 <!-- Overlay con gradiente -->
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-t-xl"></div>
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-t-xl">
+                                </div>
                             </div>
                             <div class="p-6">
                                 <div class="flex items-center justify-between mb-4">
@@ -81,7 +79,6 @@
                                             {{ formatCurrency(stock.valor) }}
                                         </h3>
                                         <p class="text-sm text-gray-500">Gift Card</p>
-                                        <p class="text-sm text-gray-500">Redímela por un total de XXXXX Italpuntos</p>
                                     </div>
                                     <span
                                         class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded-full">
@@ -114,6 +111,9 @@
 
         <!-- Footer -->
         <Footer />
+        <Modal v-if="showModal" :showModal="showModal" @confirm="confirmar2" @cancel="cancelar2" :title="titleModal"
+            :message="messageModal"></Modal>
+        <Loader :isLoading="isLoading" />
     </div>
 </template>
 
@@ -128,7 +128,12 @@ import Header from '../components/Header.vue';
 //@ts-ignore
 import TopBar from '../components/TopBar.vue';
 import Footer from '../components/Footer.vue';
+//@ts-ignore
+import Modal from '../components/Modal.vue';
+//@ts-ignore
+import Loader from '../components/Loader.vue';
 
+const isLoading = ref(false);
 const mostrarLogin = ref(false);
 const mostrarRegistro = ref(false);
 const userData = useUserStore();
@@ -147,7 +152,7 @@ interface Stock {
 }
 
 interface StoreInfo {
-    id: string;    
+    id: string;
     empresa: string;
     giftcard: string;
     condicionesHTML: string;
@@ -173,11 +178,23 @@ const storeData = ref<StoreResponse | null>(null);
 const loading = ref<boolean>(true);
 const error = ref<string | null>(null);
 
+//modal
+const showModal = ref(false);
+const messageModal = ref('mensaje');
+const titleModal = ref('titulo');
+
 // Computed properties
 const availableStocks = computed<Stock[]>(() => {
     return storeData.value?.stocks.filter(stock => stock.stock) || [];
 });
-
+const confirmar2 = () => {
+    showModal.value = false;
+    console.log('confirmar2')
+}
+const cancelar2 = () => {
+    showModal.value = false;
+    console.log('cancelar2')
+}
 // Utilidades
 const formatCurrency = (value: number): string => {
     return new Intl.NumberFormat('es-CO', {
@@ -194,19 +211,47 @@ const handleImageError = (event: Event): void => {
 };
 
 const handlePurchase = async (stock: Stock): Promise<void> => {
+    isLoading.value = true; // Mostrar el loader
     try {
         // validar puntos disponibles antes de solicitar redencion 
-        if (!storeData.value) return;
-        const buyGif = await Cupon.buyGifcard( `${storeData.value.info.id}`, userData.userCode, userData.bpCode, userData.userName, stock.valor );
-        if(!buyGif.success){
-            return
-        };
-        giftCard.saveGiftcard(buyGif.data.clave,buyGif.data.codigo,buyGif.data.empresa,buyGif.data.fechaExpiracionTicket,buyGif.data.hashPdf,buyGif.data.idGiftcard,buyGif.data.nombreEmpresa,buyGif.data.status,buyGif.data.url,buyGif.data.userCode,buyGif.data.valor);
-        //si es exitoso actualizar los puntos disponibles 
-        //ir al componente gifcard
-        router.push('/giftcard')
+        if (userData.puntosDisponibles >= stock.valor) {
+            if (!storeData.value) return;
+            const buyGif = await Cupon.buyGifcard(`${storeData.value.info.id}`, userData.userCode, userData.bpCode, userData.userName, stock.valor);
+            if (!buyGif.success) {
+                showModal.value = !showModal.value;
+                messageModal.value = '!Presentamos problemas para tus compras, intenta luego'
+                titleModal.value = 'Error'
+                return
+            };
+            if (buyGif.data.status === 'error') {
+                switch (buyGif.data.code) {
+                    case 'E121':
+                        messageModal.value = 'Error: ' + buyGif.data.message;
+                        break;
+                    // Puedes agregar más casos según los códigos de error que manejes
+                    default:
+                        messageModal.value = '!Presentamos problemas para tus compras, intenta luego'
+                }
+                showModal.value = !showModal.value;                
+                titleModal.value = 'Error'
+                return
+            }
+            giftCard.saveGiftcard(buyGif.data.clave, buyGif.data.codigo, buyGif.data.empresa, buyGif.data.fechaExpiracionTicket, buyGif.data.hashPdf, buyGif.data.idGiftcard, buyGif.data.nombreEmpresa, buyGif.data.status, buyGif.data.url, buyGif.data.userCode, buyGif.data.valor);
+            //si es exitoso actualizar los puntos disponibles 
+            userData.updateDataUser(userData.userCode as string, userData.bpCode as string, stock.valor)
+            //ir al componente gifcard
+            router.push('/giftcard')
+        } else {
+            showModal.value = !showModal.value;
+            messageModal.value = 'Saldo insuficiente para redimir'
+            titleModal.value = 'Validacion'
+        }
     } catch (err) {
-        console.error('Error al procesar la compra:', err);
+        showModal.value = !showModal.value;
+        messageModal.value = '!Presentamos problemas para tus compras, intenta luego'
+        titleModal.value = 'Error De Comunicacion'
+    } finally {
+        isLoading.value = false; // Ocultar el loader
     }
 };
 
@@ -227,7 +272,7 @@ const fetchStoreData = async (): Promise<void> => {
             if (response.data.stocks) {
                 // Usamos Promise.all para manejar todas las promesas de imágenes
                 const stocksWithImages = await Promise.all(
-                    response.data.stocks.map(async (stock : any) => {
+                    response.data.stocks.map(async (stock: any) => {
                         const randomImage = await getImagesForCategory(response.data.info.categoria);
                         return {
                             ...stock,
@@ -235,7 +280,7 @@ const fetchStoreData = async (): Promise<void> => {
                         };
                     })
                 );
-                
+
                 response.data.stocks = stocksWithImages;
             }
             storeData.value = response.data;
@@ -255,8 +300,8 @@ const fetchStoreData = async (): Promise<void> => {
 const getImagesForCategory = async (category: string): Promise<string> => {
     const ImagenRandom = Math.floor(Math.random() * 6) + 1;
     let imgcupon = await Cupon.getImg(ImagenRandom, category);
-    
-    return imgcupon === 500 
+
+    return imgcupon === 500
         ? `https://web.ceramicaitalia.com/temporada/italpuntos/${category}/1.jpg`
         : `https://web.ceramicaitalia.com/temporada/italpuntos/${category}/${ImagenRandom}.jpg`;
 }
