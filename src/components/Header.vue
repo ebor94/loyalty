@@ -1,6 +1,6 @@
 <template>
   <div>
-  <header class="bg-white py-4 shadow-sm">
+  <header class="bg-gray-50 py-4 shadow-sm">
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex items-center justify-between">
         <div class="w-10"></div> <!-- Espaciador izquierdo -->
