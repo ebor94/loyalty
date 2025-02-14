@@ -39,7 +39,7 @@
        </div>
        
        <!-- Botón de descarga (ahora debajo de la tarjeta) -->
-       <button @click="downloadPDF"
+       <button @click="downloadCard(giftCardData.url)"
            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 mt-4">
            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                stroke="currentColor">
@@ -48,41 +48,58 @@
            </svg>
            Descargar Gift Card
        </button>
+       <Loader :isLoading="isLoading" />
    </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useStoreGiftcard } from '../store/gifCard';
+
 import router from '../router';
-declare const html2pdf: any;
+//@ts-ignore
+import Loader from './Loader.vue';
 
+const isLoading = ref(false);
 const giftCardData = useStoreGiftcard();
-
 const giftCardRef = ref<HTMLElement | null>(null);
 
 const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString();
 };
 
-const downloadPDF = async () => {  
-    if (!giftCardRef.value) return;  
-  
-    try {  
-        const element = giftCardRef.value; // Usa la referencia al elemento HTML  
-        const options = {  
-            margin: 0.5,  
-            filename: `giftcard-${giftCardData.codigo}.pdf`,  
-            image: { type: 'jpeg', quality: 1 },  
-            html2canvas: { scale: 2 },  
-            jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }  
-        };  
-        
-        await html2pdf().set(options).from(element).save();  
-        giftCardData.clearGiftCard();
-        router.push('/store')
-    } catch (error) {  
-        console.error('Error al generar el PDF:', error);  
-        alert('Error al generar el PDF. Por favor, intente nuevamente.');  
-    }  
-};
+const downloadCard = async(urlGif : string)=>{
+        if (!giftCardRef.value) return;  
+try {
+    isLoading.value = true; // Mostrar el loader
+      // Hacer una solicitud GET a la URL
+      const response = await fetch(urlGif);
+
+      if (!response.ok) {
+        throw new Error('Error al descargar el archivo');
+      }
+
+      // Convertir la respuesta a un Blob
+      const blob = await response.blob();
+
+      // Crear un enlace temporal para la descarga
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'GifCard.pdf'; // Nombre del archivo descargado
+      document.body.appendChild(a);
+      a.click();
+
+      // Limpiar y liberar el objeto URL
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      router.push('/store')
+    } catch (error) {
+      console.error('Error al descargar el archivo:', error);
+      alert('Hubo un error al descargar el archivo. Inténtalo de nuevo.');
+    }finally{
+        isLoading.value = false;
+    }
+
+}    
+
 </script>
