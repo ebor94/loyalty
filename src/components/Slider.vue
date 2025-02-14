@@ -53,7 +53,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  pathSlider: ''
+  pathSlider: '/src/assets/img/pagina-home.jpg'
 })
 
 </script>
