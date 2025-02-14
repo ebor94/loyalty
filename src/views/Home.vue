@@ -2,7 +2,7 @@
     <div>
       <TopBar  @mostrarLogin="toggleMostrarLogin" />
       <Header></Header>
-      <Slider pathSlider="./src/assets/img/pagina-home.jpg"></Slider>
+      <Slider pathSlider="/src/assets/img/pagina-home.jpg"></Slider>
       <HeroSlider />
       <ExperienceSection />
       <about/>
