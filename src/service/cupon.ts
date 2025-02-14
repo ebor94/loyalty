@@ -42,9 +42,7 @@ export const Cupon = {
     }
   },
 
-  async buyGifcard(idGiftcard : string , userCode : string | null , bpCode : string | null , userName : string | null , valorGif : number) : Promise<any>{
-
-     
+  async buyGifcard(idGiftcard : string , userCode : string | null , bpCode : string | null , userName : string | null , valorGif : number) : Promise<any>{     
     try {
       let data = JSON.stringify({
         idGiftcard : idGiftcard,
@@ -71,10 +69,72 @@ export const Cupon = {
       return 500;
       
     }
-
   },
 
-  async saveGiftCardBought(clave : string, codigo:string, empresa: string, fechaExpiracionTicket: string, hashPdf : string, idGiftcard: string, nombreEmpresa : string, status: string, url : string, userCode: string, valor: number,): Promise<any>{
+  async saveGiftCardBought(clave : string, codigo:string, empresa: string, fechaExpiracionTicket: string, hashPdf : string, idGiftcard: string, nombreEmpresa : string, status: string, url : string, userCode: string, valor: number): Promise<any>{
+    try {
+      let data: string = JSON.stringify({
+        bandera             :'2'             ,
+        clave               :clave               ,
+        codTarjeta          :codigo              ,
+        empresa             :empresa             ,
+        fechaExpiracionTicket:fechaExpiracionTicket,
+        hashPdf             :hashPdf             ,
+        idGiftcard          :idGiftcard          ,
+        nombreEmpresa       :nombreEmpresa       ,
+        status              :status              ,
+        url                 :url                 ,
+        userCode            :userCode            ,
+        valor               :valor               ,
+        codigo:codigo,
+      });
+      const response = await axios({
+        method: "post",
+        maxBodyLength: Infinity,
+        url: `${domain}/clientes/italpuntos/registrarGiftCard`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      });
 
+      return response.data;
+    } catch (error) {
+      return 500;
+      
+    }
+  },
+  async getGiftcardBought(userCode: string){
+    try {
+      let data: string = JSON.stringify({
+        bandera             :'1'             ,
+        clave               :null               ,
+        codTarjeta          :null              ,
+        empresa             :null             ,
+        fechaExpiracionTicket:null,
+        hashPdf             :null             ,
+        idGiftcard          :null          ,
+        nombreEmpresa       :null       ,
+        status              :null              ,
+        url                 :null                 ,
+        userCode            :userCode            ,
+        valor               :null               ,
+        codigo              :null,
+      });
+      const response = await axios({
+        method: "post",
+        maxBodyLength: Infinity,
+        url: `${domain}/clientes/italpuntos/registrarGiftCard`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      });
+
+      return response.data;
+    } catch (error) {
+      return 500;
+      
+    }
   }
 };
