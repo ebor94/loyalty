@@ -7,8 +7,8 @@
       <!-- Métricas principales -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow p-6">
-          <h3 class="text-gray-500 text-sm mb-1">Puntosa Disponible</h3>
-          <p class="text-2xl font-bold text-green-600">{{ formatCurrency(stats.availableBalance) }}</p>
+          <h3 class="text-gray-500 text-sm mb-1">Puntos Disponibles</h3>
+          <p class="text-2xl font-bold text-green-600">{{ stats.availableBalance < 0 ? 0 : formatCurrency(stats.availableBalance) }}</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
           <h3 class="text-gray-500 text-sm mb-1">Total Acumulado</h3>
@@ -54,20 +54,21 @@
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Venta</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pedido</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Comisión</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-              <tr v-for="sale in sales" :key="sale.id">
-                <td class="px-6 py-4">{{ formatDate(sale.date) }}</td>
-                <td class="px-6 py-4">{{ sale.clientName }}</td>
-                <td class="px-6 py-4">{{ formatCurrency(sale.amount) }}</td>
-                <td class="px-6 py-4">{{ formatCurrency(sale.commission) }}</td>
+              <tr v-for="sale in sales" :key="sale.consecutivo">
+                <td class="px-6 py-4">{{ sale.fecharegistro }}</td>
+                <td class="px-6 py-4">{{ sale.nombre }}</td>
+                <td class="px-6 py-4">{{ sale.documento }}</td>
+               
+                <td class="px-6 py-4">{{ formatCurrency(sale.margenaliado) }}</td>
                 <td class="px-6 py-4">
-                  <span :class="getStatusClass(sale.status)">
-                    {{ sale.status }}
+                  <span :class="getStatusClass(sale.aprobcte)">
+                    {{ sale.aprobcte  == "1" ? "Aprobado" : 'Pendiente'}}
                   </span>
                 </td>
               </tr>
@@ -85,20 +86,37 @@
           <table class="w-full">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Monto</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha De Redencion</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha De Vencimiento</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Marca Adquirida</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">codigo de Tarjeta</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Monto Solcitado</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Descargar</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-              <tr v-for="redemption in redemptions" :key="redemption.id">
-                <td class="px-6 py-4">{{ formatDate(redemption.date) }}</td>
-                <td class="px-6 py-4">{{ formatCurrency(redemption.amount) }}</td>
+              <tr v-for="redemption in redemptions" :key="redemption.idGiftcard">
+                <td class="px-6 py-4">{{ formatDate(redemption.fechaRegistro)}}</td>
+                <td class="px-6 py-4">{{ formatDate(redemption.fechaExpiracionTicket)}}</td>
+                <td class="px-6 py-4">{{ redemption.empresa}}</td>
+                <td class="px-6 py-4">{{ redemption.codTarjeta }}</td>
+                <td class="px-6 py-4">{{ formatCurrency(redemption.valor) }}</td>
                 <td class="px-6 py-4">
                   <span :class="getRedemptionStatusClass(redemption.status)">
-                    {{ redemption.status }}
+                    {{ redemption.status  == 'success'?  'activo' : redemption.status}}
                   </span>
                 </td>
+                <td class="px-6 py-4">
+            <button  @click="downloadCard(redemption.url)"> 
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+      <polyline points="7 10 12 15 17 10"></polyline>
+      <line x1="12" y1="15" x2="12" y2="3"></line>
+    </svg>
+    
+  </button>
+          </td>
               </tr>
             </tbody>
           </table>
@@ -110,13 +128,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useUserStore } from '../store/user';
 import axios from 'axios';
  // @ts-ignore
 import TopBar from '../components/TopBar.vue';
  // @ts-ignore
 import Header from '../components/Header.vue';
 import Footer from '../components/Footer.vue';
+const UserStore = useUserStore();
 
 interface Professional {
   id: string
@@ -130,19 +150,24 @@ interface Stats {
 }
 
 interface Sale {
-  id: string
-  date: Date
-  clientName: string
-  amount: number
-  commission: number
-  status: 'Pendiente' | 'Confirmada' | 'Rechazada'
+  consecutivo: string
+  fecharegistro: string
+  nombre: string
+  documento:string
+  margenaliado: number
+  aprobcte : '1' | '0' | ''
 }
 
 interface Redemption {
-  id: string
-  date: Date
-  amount: number
-  status: 'Pendiente' | 'Aprobada' | 'Rechazada' | 'Pagada'
+  idGiftcard: string
+  fechaRegistro: string
+  fechaExpiracionTicket: string
+  codTarjeta :string
+  nombreEmpresa: string
+  empresa :string
+  status: string
+  valor :number
+  url:string
 }
 
 const professional = ref<Professional>({
@@ -151,30 +176,15 @@ const professional = ref<Professional>({
 })
 
 const stats = ref<Stats>({
-  availableBalance: 2500000,
-  totalEarned: 3500000,
-  totalRedeemed: 1000000
+  availableBalance: UserStore.puntosDisponibles,
+  totalEarned: UserStore.puntosAcumulados,
+  totalRedeemed: UserStore.PuntosRedimidos
 })
 
-const sales = ref<Sale[]>([
-  {
-    id: 'S1',
-    date: new Date(),
-    clientName: 'Juan Pérez',
-    amount: 1500000,
-    commission: 75000,
-    status: 'Confirmada'
-  }
-])
 
-const redemptions = ref<Redemption[]>([
-  {
-    id: 'R1',
-    date: new Date(),
-    amount: 1000000,
-    status: 'Pagada'
-  }
-])
+const sales = ref<Sale[]>(UserStore.Acumulaciones)
+
+const redemptions = ref<Redemption[]>()
 
 const redemptionAmount = ref<number>(0)
 
@@ -189,19 +199,17 @@ const formatCurrency = (value: number): string => {
   }).format(value)
 }
 
-const formatDate = (date: Date): string => {
-  return new Intl.DateTimeFormat('es-CO').format(date)
-}
 
-const getStatusClass = (status: Sale['status']): string => {
+
+const getStatusClass = (status: Sale['aprobcte']): string => {
   const baseClasses = 'px-2 py-1 rounded-full text-xs font-medium'
   switch (status) {
-    case 'Pendiente':
-      return `${baseClasses} bg-yellow-100 text-yellow-800`
-    case 'Confirmada':
-      return `${baseClasses} bg-green-100 text-green-800`
-    case 'Rechazada':
-      return `${baseClasses} bg-red-100 text-red-800`
+    case '':
+      return `Pendiente bg-yellow-100 text-yellow-800`
+    case '1':
+      return `Confirmada bg-green-100 text-green-800`
+    case '0':
+      return `Rechazada bg-red-100 text-red-800`
     default:
       return baseClasses
   }
@@ -214,13 +222,46 @@ const getRedemptionStatusClass = (status: Redemption['status']): string => {
       return `${baseClasses} bg-yellow-100 text-yellow-800`
     case 'Aprobada':
       return `${baseClasses} bg-blue-100 text-blue-800`
-    case 'Pagada':
+    case 'activo':
       return `${baseClasses} bg-green-100 text-green-800`
+    case 'success':
+      return `${baseClasses} bg-green-100 text-green-800`      
     case 'Rechazada':
       return `${baseClasses} bg-red-100 text-red-800`
     default:
       return baseClasses
   }
+}
+
+const downloadCard = async(urlGif : string)=>{
+
+  try {
+        // Hacer una solicitud GET a la URL
+        const response = await fetch(urlGif);
+
+        if (!response.ok) {
+          throw new Error('Error al descargar el archivo');
+        }
+
+        // Convertir la respuesta a un Blob
+        const blob = await response.blob();
+
+        // Crear un enlace temporal para la descarga
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'GifCard.pdf'; // Nombre del archivo descargado
+        document.body.appendChild(a);
+        a.click();
+
+        // Limpiar y liberar el objeto URL
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } catch (error) {
+        console.error('Error al descargar el archivo:', error);
+        alert('Hubo un error al descargar el archivo. Inténtalo de nuevo.');
+      }
+
 }
 
 const requestRedemption = async () => {
@@ -237,6 +278,20 @@ const requestRedemption = async () => {
     console.error('Error al solicitar redención:', error)
   }
 }
+
+function formatDate(dateString : string) {
+  const date = new Date(dateString);
+  const options = {
+    year: 'numeric' as const,
+    month: 'long' as const,
+    day: 'numeric' as const,
+    hour: '2-digit' as const,
+    minute: '2-digit' as const,
+    second: '2-digit' as const,
+    timeZone: 'UTC' // Asegúrate de que la fecha se muestre en UTC
+  };
+  return new Intl.DateTimeFormat('es-ES', options).format(date);
+}
 const mostrarLogin = ref(false);
 const mostrarRegistro = ref(false);
 const toggleMostrarLogin = () => {
@@ -244,4 +299,11 @@ const toggleMostrarLogin = () => {
   mostrarRegistro.value = false; // Ocultar registro si se muestra login
 
 };
+
+onMounted(() => {
+
+   UserStore.getDataUser(UserStore.userCode as string, UserStore.bpCode as string)
+   redemptions.value = UserStore.Redenciones
+  
+})
 </script>
