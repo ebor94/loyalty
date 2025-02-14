@@ -21,7 +21,7 @@
             <p class="text-gray-600 mb-8">
               Regístrate y empieza a acumular tus puntos hoy mismo
             </p>
-            <button @click="handleRegistro" class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg transition-colors">
+            <button @click="handleRegistro" class="bg-gray-900 hover:bg-red-800 text-white px-8 py-3 rounded-lg transition-colors">
               Registrate!
             </button>
           </div>
