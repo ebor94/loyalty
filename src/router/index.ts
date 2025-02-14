@@ -17,7 +17,7 @@ const routes = [
     meta: { requiresAuth: false }, // Ruta pública
   },
   {
-    path: '/client/:id',
+    path: '/client/:pedido/:cc',
     component: ClientConfirmation,
     meta: { requiresAuth: false }, // Ruta pública
   },
@@ -30,7 +30,7 @@ const routes = [
   {
     path: '/dash-professional/:id',
     component: ProfessionalDashboard,
-    meta: { requiresAuth: false}, // Ruta privada
+    meta: { requiresAuth: true}, // Ruta privada
   },
   {
     path: '/registro',
@@ -49,7 +49,7 @@ const routes = [
     name: 'store-detail',
     component: StoreDetail,
     props: true,
-    meta: { requiresAuth: false }, // Ruta privada
+    meta: { requiresAuth: true }, // Ruta privada
   }
   ,
   {
@@ -57,7 +57,7 @@ const routes = [
     name: 'giftcard',
     component: GiftCard,
     props: true,
-    meta: { requiresAuth: false }, // Ruta privada
+    meta: { requiresAuth: true }, // Ruta privada
   }
 ]
 
