@@ -22,7 +22,7 @@ const routes = [
     meta: { requiresAuth: false }, // Ruta pública
   },
   {
-    path: '/professional/:id',
+    path: '/professional/:ped/:ced',
     component: ProfessionalConfirmation,
     meta: { requiresAuth: false }, // Ruta pública
   }
