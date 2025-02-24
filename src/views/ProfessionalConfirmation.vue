@@ -1,4 +1,5 @@
-// ProfessionalConfirmation.vue
+
+// ClientConfirmation.vue
 <template>
   <div class="min-h-screen bg-gray-50">
     <nav class="bg-white shadow-md">
@@ -10,50 +11,37 @@
     <main class="max-w-2xl mx-auto px-4 py-16">
       <div class="bg-white rounded-lg shadow-xl p-8">
         <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">
-          Confirmación de Venta
+          Confirma tu Profesional
         </h1>
 
         <div class="space-y-6">
           <div class="bg-gray-50 p-6 rounded-lg">
-            <h2 class="text-lg font-medium text-gray-900 mb-4">
-              Detalles de la venta
-            </h2>
-            
-            <div class="space-y-4">
-              <div>
-                <p class="text-sm text-gray-500">Cliente</p>
-                <p class="text-gray-900">{{ sale.clientName }}</p>
-              </div>
-              
-              <div>
-                <p class="text-sm text-gray-500">Valor de la compra</p>
-                <p class="text-gray-900 text-xl font-semibold">
-                  {{ formatCurrency(sale.amount) }}
-                </p>
-              </div>
-              
-              <div>
-                <p class="text-sm text-gray-500">Tu comisión</p>
-                <p class="text-green-600 text-xl font-semibold">
-                  {{ formatCurrency(sale.commission) }}
-                </p>
-              </div>
-              
-              <div class="pt-4 border-t">
-                <p class="text-sm text-gray-500">Acumulado total</p>
-                <p class="text-blue-600 text-2xl font-bold">
-                  {{ formatCurrency(sale.totalAccumulated) }}
-                </p>
-              </div>
-            </div>
+            <p class="text-gray-600 mb-2">{{ professionalTitle }}</p>
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">
+              {{ professionalName }}
+            </h2>            
+            <p class="text-gray-600">{{ professionalId }}</p>
           </div>
+          <div v-if="estadoAprobacion" class="flex flex-col sm:flex-row gap-4 justify-center mt-8">  
+              <span class="text-green-600">✓ Confirmado</span>  
+            </div>
 
-          <div class="flex justify-center mt-8">
+          <div v-else class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+            <p class="text-gray-700 text-center">
+            ¿Confirmas que conoces a este cliente, quien te refirio en italpuntos?
+          </p>
+         
             <button
-              @click="confirmSale"
+              @click="confirmProfessional"
               class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Confirmar venta
+              Sí, confirmar
+            </button>
+            <button
+              @click="rejectProfessional"
+              class="bg-gray-200 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              No, cancelar
             </button>
           </div>
         </div>
@@ -63,40 +51,106 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
-import { ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { cliente } from '../service/clientes';
 
-interface Sale {
+interface Professional {
   id: string
-  clientName: string
-  amount: number
-  commission: number
-  totalAccumulated: number
+  name: string
+  title: string
 }
 
-const sale = ref<Sale>({
-  id: 'SALE123',
-  clientName: 'Juan Pérez',
-  amount: 1500000,
-  commission: 75000,
-  totalAccumulated: 450000
+const professional = ref<Professional>({
+  id: '',
+  name: '',
+  title: ''
 })
 
-const formatCurrency = (value: number): string => {
-  return new Intl.NumberFormat('es-CO', {
-    style: 'currency',
-    currency: 'COP'
-  }).format(value)
+interface Referido {
+  consecutivo: string;
+  documento: string;
+  destinatario: string;
 }
 
-const confirmSale = async () => {
+const referido = ref<Referido>({
+  consecutivo: '',
+  documento: '',
+  destinatario: ''
+})
+const cedulaCliente  = ref<String>('');
+const numeroPedido = ref<String>('');
+const estadoAprobacion = ref<boolean>(false)
+
+const route = useRoute()
+
+const professionalName = computed(()  =>   professional.value.name  )
+const professionalTitle = computed(() =>   professional.value.title )
+const professionalId = computed(()    =>   professional.value.id    )
+
+const confirmProfessional = async () => {
   try {
-    await axios.post('/api/confirm-sale', {
-      saleId: sale.value.id
-    })
-    // Mostrar mensaje de éxito
+    const aprobacionCte = await cliente.getDataloyalty(cedulaCliente.value as string, numeroPedido.value as string, '02', '',0)
+    console.log(aprobacionCte)
+    //referido.value = aprobacionCte[0];
+    if(aprobacionCte[0].aprobgte == '1'){
+     
+      const puntos  = await cliente.registraAprobacion( aprobacionCte[0].consecutivo as string ,aprobacionCte[0].documento as string,  aprobacionCte[0].destinatario as string);
+      if(puntos.quote.length){        
+        //console.log(puntos.quote.length);
+        referido.value = puntos.quote[0]
+        estadoAprobacion.value = true;
+      }
+     
+      }
+    // Redireccionar o mostrar mensaje de éxito
   } catch (error) {
-    console.error('Error al confirmar la venta:', error)
+    alert('Error al confirmar al cliente')
   }
 }
+
+const rejectProfessional = () => {
+  // Lógica para manejar el rechazo
+}
+
+onMounted(async()=>{
+ // console.log(route.params)
+cedulaCliente.value = route.params.ced as string
+numeroPedido.value = route.params.ped as string
+
+
+try {
+ const data = await cliente.getDataloyalty(numeroPedido.value  as string, numeroPedido.value as string, '99', '',0)
+ // console.log(data)
+  referido.value = data[0];
+
+  if(data[0].identificacion === cedulaCliente.value){
+     const  infocte = await cliente.getCliente(data[0].identificacion);
+    //console.log(infoProfessional.data)
+
+    professional.value.name  = infocte.data[0].name1
+    professional.value.title = infocte.data[0].anred
+    professional.value.id    = infocte.data[0].kunnr
+
+    if(data[0].aprobgte == '1'){
+      estadoAprobacion.value = true;
+    }
+
+  }
+} catch (error) {
+  console.log(error)
+}finally{
+
+  try {
+    
+    const puntos  = await cliente.registraAprobacion( referido.value.consecutivo as string ,referido.value.documento as string,  referido.value.destinatario as string);
+    const aperturaCte = await cliente.getDataloyalty(cedulaCliente.value as string, numeroPedido.value as string, '05', '',puntos.comision)
+    //console.log()
+    //referido.value = aperturaCte[0];
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+})
 </script>
