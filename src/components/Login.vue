@@ -142,7 +142,7 @@ const verificarCedula = async () => {
             return
         }
     
-        if (infoCliente.data[0].stcd1 == formData.cedula) {
+        if (infoCliente.data[0].stcd1 == formData.cedula || infoCliente.data[0].stcd2 == formData.cedula) {
             formData.telIncryp = infoCliente.data[0].telf1;
             formData.token = generateToken();
             UserStore.saveUser(infoCliente.data[0].name1, infoCliente.data[0].stcd1 , infoCliente.data[0].kunnr );
