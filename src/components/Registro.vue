@@ -33,8 +33,7 @@
                             <div class="flex items-center">
                                 <input v-model="formData.acceptTerms" type="checkbox"
                                     class="h-4 w-4 text-red-600 border-gray-300 rounded" />
-                                <span class="ml-2">Accept <a href="#" class="text-red-600 hover:underline">Terms and
-                                        Conditions</a></span>
+                                <span class="ml-2">Acepta  <a href="#" class="text-red-600 hover:underline">Terminos y condiciones De Italpuntos? </a></span>
                             </div>
 
                             <button type="submit"
