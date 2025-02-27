@@ -23,6 +23,11 @@
                             <label>Ingresa el token enviado a :</label>
                             <input v-model="formData.telefono" type="tel" placeholder="Teléfono" disabled
                                 class="w-full p-3 border rounded-md" />
+                                <div class="flex items-center">
+                                <input v-model="formData.acceptTerms" type="checkbox" checked
+                                    class="h-4 w-4 text-red-600 border-gray-300 rounded" />
+                                <span class="ml-2">Acepta  <a href="#" class="text-red-600 hover:underline">Terminos y condiciones De Italpuntos? </a></span>
+                            </div>    
                             <input v-model="formData.tokenIn" type="text" placeholder="token"
                                 class="w-full p-3 border rounded-md" />
                                 <button type="button" @click="verificarToken"
@@ -67,6 +72,7 @@ interface FormData {
     token: string
     telIncryp: string
     tokenIn : string
+    acceptTerms :boolean
 }
 
 const showForm = ref(false)
@@ -78,7 +84,8 @@ const formData = reactive<FormData>({
     telefono: '',
     token: '',
     telIncryp: '',
-    tokenIn: ''
+    tokenIn: '',
+    acceptTerms :false
 
 })
 
@@ -100,6 +107,13 @@ const generateToken = () => {
 
 const verificarToken = async () =>{
     if (!formData.tokenIn) return
+
+    if (!formData.acceptTerms) {
+        alert('Debes aceptar los términos y condiciones')
+        return
+    }
+
+
     if (formData.tokenIn.length < 5) {
         showModal.value = true;
         messageModal.value = 'El token debe tener 5 digitos';
