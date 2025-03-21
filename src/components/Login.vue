@@ -9,32 +9,72 @@
                             class="text-blue-600 hover:underline">aquí</button></p>
 
                     <form class="space-y-4">
-                        <div class="flex space-x-2">
+                        <div class="flex space-x-3">
                             <input v-model="formData.cedula" type="text" placeholder="Numero de cedula"
                                 class="flex-1 p-3 border rounded-md" />
-                            <button @click.prevent="verificarCedula"
+                                <div class="flex items-center relative">
+                                    <input v-model="formData.checkItalParner" type="checkbox"
+                                        class="h-4 w-4 text-red-600 border-gray-300 rounded" />
+                                    <span class="ml-2">
+                                        <span 
+                                            class="ml-1 text-gray-500 cursor-pointer relative group"
+                                            aria-label="tooltip"
+                                        >Soy Italpartner 
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                                            </svg>
+                                            <!-- Tooltip -->
+                                            <div class="absolute left-0 bottom-full mb-2 w-48 p-2 bg-gray-800 text-white text-sm rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                                                Un Italpartner es un ejecutivo comercial que pertenece a nuestra red de aliados estratégicos.
+                                            </div>
+                                        </span>
+                                    </span>
+                                </div>
+                        </div>
+                        <div class="flex space-x-3">
+                        <button @click.prevent="verificarCedula"
                                 class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                                 :disabled="isLoading">
                                 {{ isLoading ? 'Verificando...' : 'Verificar' }}
                             </button>
-                        </div>
+                        </div>  
 
                         <template v-if="showForm">
                             <label>Ingresa el token enviado a :</label>
                             <input v-model="formData.telefono" type="tel" placeholder="Teléfono" disabled
                                 class="w-full p-3 border rounded-md" />
-                                <div class="flex items-center">
-                                <input v-model="formData.acceptTerms" type="checkbox" checked
-                                    class="h-4 w-4 text-red-600 border-gray-300 rounded" />
-                                <span class="ml-2">Acepta  <a href="#" class="text-red-600 hover:underline">Terminos y condiciones De Italpuntos? </a></span>
-                            </div>    
-                            <input v-model="formData.tokenIn" type="text" placeholder="token"
+                             <input v-model="formData.tokenIn" type="text" placeholder="token"
                                 class="w-full p-3 border rounded-md" />
+                            <!-- Botones de reenvío -->
+                            <div class="flex flex-col space-y-2 mb-4">
+                                <button 
+                                    @click="reenviarTokenSMS" 
+                                    :disabled="isLoading || smsCountdown > 0"
+                                    class="text-blue-600 hover:text-blue-800 text-sm"
+                                >
+                                    {{ smsCountdown > 0 ? `Reenviar token por SMS (${smsCountdown}s)` : 'Reenviar token por SMS' }}
+                                </button>
+                                
+                                <button 
+                                    @click="enviarTokenEmail" 
+                                    :disabled="isLoading || emailCountdown > 0"
+                                    class="text-blue-600 hover:text-blue-800 text-sm"
+                                >
+                                    {{ emailCountdown > 0 ? `Enviar token por email (${emailCountdown}s)` : 'No recibí SMS, enviar por email' }}
+                                </button>
+                            </div>
+
+                                <div class="flex items-center">
+                                    <input v-model="formData.acceptTerms" type="checkbox" checked
+                                        class="h-4 w-4 text-red-600 border-gray-300 rounded" />
+                                    <span class="ml-2">Acepta  <a href="#" class="text-red-600 hover:underline">Terminos y condiciones De Italpuntos? </a></span>
+                                </div>    
                                 <button type="button" @click="verificarToken"
                                     class="w-full bg-red-600 text-white py-3 px-4 rounded-md font-bold hover:bg-red-700">
                                     Iniciar Sesion
                                 </button>    
-                        </template>                     
+                        </template>           
+                                  
                     </form>
                 </div>
 
@@ -73,11 +113,86 @@ interface FormData {
     telIncryp: string
     tokenIn : string
     acceptTerms :boolean
+    checkItalParner : boolean
 }
 
-const showForm = ref(false)
+const showForm = ref(true)
 const isLoading = ref(false)
 const isExistingUser = ref(false)
+
+const smsCountdown = ref(0)
+const emailCountdown = ref(0)
+
+// Función para iniciar el contador
+const startCountdown = (type: 'sms' | 'email') => {
+    const countdownRef = type === 'sms' ? smsCountdown : emailCountdown
+    countdownRef.value = 60 // 60 segundos de espera
+    
+    const interval = setInterval(() => {
+        countdownRef.value--
+        if (countdownRef.value <= 0) {
+            clearInterval(interval)
+        }
+    }, 1000)
+}
+
+// Función para reenviar token por SMS
+const reenviarTokenSMS = async () => {
+    if (smsCountdown.value > 0) return
+
+    try {
+        isLoading.value = true
+        formData.token = generateToken() // Generar nuevo token
+        
+        const resultsms = await sendMessage(
+            formData.telIncryp, 
+            `ingresa este token  ${formData.token}, para el inicio de sesión Italpuntos`
+        )
+
+        if (resultsms.resultCode == "0") {
+            showModal.value = true
+            messageModal.value = 'Token reenviado exitosamente por SMS'
+            titleModal.value = 'Éxito'
+            startCountdown('sms')
+        } else {
+            throw new Error('Error al enviar SMS')
+        }
+    } catch (error) {
+        showModal.value = true
+        messageModal.value = 'Error al reenviar el token por SMS'
+        titleModal.value = 'Error'
+    } finally {
+        isLoading.value = false
+    }
+}
+
+// Función para enviar token por email
+const enviarTokenEmail = async () => {
+    if (emailCountdown.value > 0) return
+
+    try {
+        isLoading.value = true
+        formData.token = generateToken() // Generar nuevo token
+        
+        // Aquí deberías agregar la llamada a tu servicio de envío de emails
+        const result = true // await cliente.sendTokenEmail(formData.cedula, formData.token)
+        
+        if (result) { //result.success  Ajusta según la respuesta real de tu API
+            showModal.value = true
+            messageModal.value = 'Token enviado exitosamente a tu correo electrónico'
+            titleModal.value = 'Éxito'
+            startCountdown('email')
+        } else {
+            throw new Error('Error al enviar email')
+        }
+    } catch (error) {
+        showModal.value = true
+        messageModal.value = 'Error al enviar el token por correo electrónico'
+        titleModal.value = 'Error'
+    } finally {
+        isLoading.value = false
+    }
+}
 
 const formData = reactive<FormData>({
     cedula: '',
@@ -85,6 +200,7 @@ const formData = reactive<FormData>({
     token: '',
     telIncryp: '',
     tokenIn: '',
+    checkItalParner: false,
     acceptTerms :false
 
 })
