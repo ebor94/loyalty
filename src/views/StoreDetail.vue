@@ -80,10 +80,10 @@
                                         </h3>
                                         <p class="text-sm text-gray-500">Gift Card</p>
                                     </div>
-                                    <span
+                                   <!--  <span
                                         class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded-full">
                                         Disponible
-                                    </span>
+                                    </span> -->
                                 </div>
                                 <button
                                     class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
