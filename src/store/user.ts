@@ -58,7 +58,7 @@ export const useUserStore = defineStore('user', {
       this.Acumulaciones =  data.filter((item:any) => item.aprobcte === '1')      
       this.Redenciones = balance.data;
       this.PuntosRedimidos =  this.Redenciones.reduce((sum, item) => sum + item.valor, 0);
-      this.puntosAcumulados = data.reduce((sum : number, item : any) =>  item.aprobcte === '1' ? sum + item.margenaliado : sum, 0);
+      this.puntosAcumulados = data.reduce((sum : number, item : any) =>   sum + item.margeninterno , 0);
       this.puntosDisponibles = this.puntosAcumulados - this.PuntosRedimidos
       this.puntosDisponibles = this.puntosDisponibles < 0 ? 0 : this.puntosDisponibles
          
