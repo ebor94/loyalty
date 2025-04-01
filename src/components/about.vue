@@ -19,11 +19,16 @@
               memorables para que las puedas disfrutar con tu familia.
             </p>
             <p class="text-gray-600 mb-8">
-              Regístrate y empieza a acumular tus puntos hoy mismo
+              Regístrate y empieza a acumular tus puntos hoy mismo si eres italparner <a href="/resgistro-italparner"><b>Aqui</b></a>
+            </p>
+            <p class="text-gray-600 mb-8">
+              si eres Esclub o Supermaestros, contacta a tu asesor de confianza para que te ayude a registrarte o validas con tu cedula 
             </p>
             <button @click="handleRegistro" class="bg-gray-900 hover:bg-red-800 text-white px-8 py-3 rounded-lg transition-colors">
-              Registrate!
+              Ingresa!
             </button>
+
+          
           </div>
         </div>
   

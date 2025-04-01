@@ -60,5 +60,29 @@ export const Message = {
       return null;
     }
     
+  },
+
+  async sendEmail(to : string ,msj:string,subject:string): Promise<any> {
+    try {
+      const raw = {
+        to : to,
+        msj : msj,
+        subject : subject
+      }
+      const response = await axios({
+        method: "post",
+        maxBodyLength: Infinity,
+        url: `${domain}/mensajeria/mail/`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: JSON.stringify(raw),
+      });
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   }
 };
