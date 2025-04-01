@@ -104,3 +104,89 @@ export const cliente = {
     }
   },
 };
+
+
+interface ItalparnerData {
+  Cedula: string;
+  Nombre: string;
+  Apellido: string;
+  Email: string;
+  Telefono: string;
+  Ciudad: string;
+  Direccion: string;
+  Tratamiento: string;
+  gerente?: string;
+}
+
+interface ItalparnerResponse {
+  success: boolean;
+  message?: string;
+  data?: any;
+  error?: string;
+}
+
+export const italparner = {
+  
+  async getInfo(cc: string): Promise<object> {
+    try {
+      const response = await axios.get(`${domain}/clientes/italpuntos/consultarItalparner/${cc}`);
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+        data: "Error interno al procesar la compra",
+      };
+    }
+  },
+  async getBalance(cc: string): Promise<object> {
+    try {
+      const response = await axios.get(`${domain}/italpuntos/balance-italparner/${cc}`);
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+        data: "Error interno al procesar la compra",
+      };
+    }
+  },
+  async register(Cedula : string,Nombre: string,Apellido: string,Email: string,Telefono: string,Ciudad: string,Direccion: string,Tratamiento: string): Promise<ItalparnerResponse > {
+
+    try {
+      const data: ItalparnerData = {
+        Cedula,
+        Nombre,
+        Apellido,
+        Email,
+        Telefono,
+        Ciudad,
+        Direccion,
+        Tratamiento
+        
+      };
+      const response = await axios.post(
+        `${domain}/clientes/italpuntos/registrarItalparner/`, 
+        data,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'accept': '*/*'
+          }
+        }
+      );
+  
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+        data: "Error interno al procesar la compra",
+      };
+    }
+  },
+
+}
