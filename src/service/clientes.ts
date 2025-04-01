@@ -139,9 +139,10 @@ export const italparner = {
       };
     }
   },
-  async getBalance(cc: string): Promise<object> {
-    try {
-      const response = await axios.get(`${domain}/italpuntos/balance-italparner/${cc}`);
+  async getBalance(cc: string, Bandera:string): Promise<object> {
+    console.log("va a consultar synergy", cc , Bandera);
+    try {     
+      const response = await axios.get(`${domain}/clientes/italpuntos/balance-italparner/${cc}/${Bandera}`);
       return response.data;
     } catch (error: any) {
       return {
@@ -151,6 +152,7 @@ export const italparner = {
       };
     }
   },
+  
   async register(Cedula : string,Nombre: string,Apellido: string,Email: string,Telefono: string,Ciudad: string,Direccion: string,Tratamiento: string): Promise<ItalparnerResponse > {
 
     try {

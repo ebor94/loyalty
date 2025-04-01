@@ -344,8 +344,9 @@ const Registrar = async () => {
   try {
     isLoading.value = true;
     const response = await italparner.register(cedula.value, pnombre.value, papellido.value, email.value, telefono.value, ciudad.value as string, direccion.value, tratamiento.value);
-    //console.log(response);
-    if (response.data.data[0].Mensaje == "El proceso de creación de la cuenta se ejecutará en los próximos 10 minutos") {
+    console.log(response);
+    
+    if (response.data.data.data[0].Mensaje == "El proceso de creación de la cuenta se ejecutará en los próximos 10 minutos") {
       Swal.fire({
         title: 'Registro exitoso',
         text: 'Gracias por registrarte, en unos minutos recibiras un mensaje de bienvenida y podras disfrutar de los beneficios de ser un ItalPartner',

@@ -213,11 +213,23 @@ const handleImageError = (event: Event): void => {
 const handlePurchase = async (stock: Stock): Promise<void> => {
     isLoading.value = true; // Mostrar el loader
     try {
+      
         // validar puntos disponibles antes de solicitar redencion 
         if (userData.puntosDisponibles >= stock.valor) {
             if (!storeData.value) return;
-            const buyGif = await Cupon.buyGifcard(`${storeData.value.info.id}`, userData.userCode, userData.bpCode, userData.userName, stock.valor);
-            if (!buyGif.success) {
+
+            let buyGif = null;
+            if(userData.typeUser === 'italpartner'){        
+                 buyGif = await Cupon.buyGifcard(`${storeData.value.info.id}`, userData.userCode, userData.userCode, userData.userName, stock.valor);
+           
+            }else{
+                 buyGif = await Cupon.buyGifcard(`${storeData.value.info.id}`, userData.userCode, userData.bpCode, userData.userName, stock.valor);
+           
+            }
+
+
+
+           if (!buyGif.success) {
                 showModal.value = !showModal.value;
                 messageModal.value = '!Presentamos problemas para tus compras, intenta luego'
                 titleModal.value = 'Error'
@@ -238,7 +250,15 @@ const handlePurchase = async (stock: Stock): Promise<void> => {
             }
             giftCard.saveGiftcard(buyGif.data.clave, buyGif.data.codigo, buyGif.data.empresa, buyGif.data.fechaExpiracionTicket, buyGif.data.hashPdf, buyGif.data.idGiftcard, buyGif.data.nombreEmpresa, buyGif.data.status, buyGif.data.url, buyGif.data.userCode, buyGif.data.valor);
             //si es exitoso actualizar los puntos disponibles 
-            userData.updateDataUser(userData.userCode as string, userData.bpCode as string, stock.valor)
+            if(userData.typeUser === 'italpartner'){        
+                userData.updateDataUserItalparner(userData.userCode as string, stock.valor)
+           
+            }else{
+                userData.updateDataUser(userData.userCode as string, userData.bpCode as string, stock.valor)
+             }   
+
+
+    
             //ir al componente gifcard
             router.push('/giftcard')
         } else {
