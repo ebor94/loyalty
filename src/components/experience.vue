@@ -38,7 +38,7 @@
             <div class="bg-white/10 rounded-full p-4 md:p-6 w-16 h-16 md:w-24 md:h-24 mx-auto mb-2 md:mb-4">
               <img src="/src/assets/img/vendedores.png" alt="Vendedor" class="w-full h-full" />
             </div>
-            <h3 class="text-white text-sm md:text-lg">Vendedores</h3>
+            <h3 class="text-white text-sm md:text-lg">Asesores</h3>
           </div>
           
           <div class="text-center">

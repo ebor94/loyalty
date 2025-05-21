@@ -9,15 +9,15 @@
         <div class="bg-white rounded-lg shadow p-6">
           <h3 class="text-gray-500 text-sm mb-1">Puntos Disponibles</h3>
           <p class="text-2xl font-bold text-green-600">{{ stats.availableBalance < 0 ? 0 :
-            formatCurrency(stats.availableBalance) }}</p>
+          stats.availableBalance }}</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
           <h3 class="text-gray-500 text-sm mb-1">Total Acumulado</h3>
-          <p class="text-2xl font-bold text-blue-600">{{ formatCurrency(stats.totalEarned) }}</p>
+          <p class="text-2xl font-bold text-blue-600">{{ stats.totalEarned }}</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
           <h3 class="text-gray-500 text-sm mb-1">Total Redimido</h3>
-          <p class="text-2xl font-bold text-gray-600">{{ formatCurrency(stats.totalRedeemed) }}</p>
+          <p class="text-2xl font-bold text-gray-600">{{ stats.totalRedeemed }}</p>
         </div>
       </div>
 
@@ -232,7 +232,7 @@ const formatCurrency = (value: number): string => {
 }
 
 const cargarFacturas = () => {  
-  const url = 'https://synergy.ceramicaitalia.com:444/Web/docs/WflRequest_Web.aspx?BCAction=0&Type=752&FreeTextField_14=Italparnerts&ReturnTo=https://italpuntos.ceramicaitalia.com';  
+  const url = 'https://synergy.ceramicaitalia.com:444/Web/docs/WflRequest_Web.aspx?BCAction=0&Type=752&FreeTextField_14=Italparnerts&ReturnTo=https://italpuntos.ceramicaitalia.com/thanks-italparner';  
   window.location.href = url;  
 }
 const getStatusClass = (status: Sale['aprobcte']): string => {

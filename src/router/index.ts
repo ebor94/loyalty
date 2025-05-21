@@ -9,6 +9,7 @@ import StoreDetail from '../views/StoreDetail.vue'
 import {useUserStore}  from '../store/user'
 import GiftCard from '../components/GiftCard.vue'
 import RegistroItalpartners from '../views/RegistroItalpartners.vue'
+import ItalparnertTanks from '../views/ItalparnertTanks.vue'
 
 
 const routes = [
@@ -58,7 +59,15 @@ const routes = [
     name: 'resgistro-italparner',
     component: RegistroItalpartners,
     props: true,
-    meta: { requiresAuth: false }, // Ruta privada
+    meta: { requiresAuth: false }, // Ruta pub
+  }
+  ,
+  {
+    path: '/thanks-italparner',
+    name: 'thanks-italparner',
+    component: ItalparnertTanks,
+    props: true,
+    meta: { requiresAuth: false }, // Ruta pub
   }
   ,
   {

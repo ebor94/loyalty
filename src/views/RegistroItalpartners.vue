@@ -7,7 +7,7 @@
     <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
       <!-- Header -->
       <div class="bg-gradient-to-r from-red-600 to-red-700 py-6 px-8">
-        <p class="text-purple-100 mt-1">Complete el formulario y conviertete en un italparner !! obten muchos beneficios
+        <p class="text-purple-100 mt-1">Complete el formulario y conviertete en un italpartner !! Obtén muchos beneficios
         </p>
       </div>
 
@@ -329,7 +329,7 @@ const Registrar = async () => {
   if (!direccion.value) errors.value.push("Dirección es requerida");
   if (!fechanacimiento.value) errors.value.push("Fecha de Nacimiento es requerida");
   if (!dptos.value) errors.value.push("Departamento es requerido");
-  if (!ciudad.value) errors.value.push("Ciudad es requerida");
+  //if (!ciudad.value) errors.value.push("Ciudad es requerida");
 
   // Validar email
   if (email.value && !emailRegex.test(email.value)) {
@@ -349,7 +349,7 @@ const Registrar = async () => {
     if (response.data.data.data[0].Mensaje == "El proceso de creación de la cuenta se ejecutará en los próximos 10 minutos") {
       Swal.fire({
         title: 'Registro exitoso',
-        text: 'Gracias por registrarte, en unos minutos recibiras un mensaje de bienvenida y podras disfrutar de los beneficios de ser un ItalPartner',
+        text: 'Gracias por registrarte, en 15 minutos nuestro sistema activa la cuenta, para que inicies sesion y podras disfrutar de los beneficios de ser un ItalPartner',
         icon: 'success',
         confirmButtonText: 'Aceptar'
       });

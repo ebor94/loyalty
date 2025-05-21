@@ -4,7 +4,7 @@
         <div class="max-w-4xl w-full bg-white rounded-lg shadow-lg overflow-hidden">
             <div class="flex flex-col md:flex-row">
                 <div class="w-full md:w-1/2 p-8">
-                    <h2 class="text-2xl font-bold mb-2">inicia sesión </h2>
+                    <h2 class="text-2xl font-bold mb-2">Iniciar Sesión</h2>
                     <!-- <p class="mb-6">O Registrate ahora <button @click="emitirMostrarRegistro"
                             class="text-blue-600 hover:underline">aquí</button></p> -->
 
@@ -309,7 +309,7 @@ const verificarToken = async () => {
             UserStore.setToken(formData.token, sessionToken.tokenSesion)
         }
 
-        router.push('/store')
+        router.push(`dash-professional/${UserStore.bpCode}`)
     } else {
         showModal.value = true;
         messageModal.value = 'El token es incorrecto';
@@ -406,7 +406,7 @@ const verificarCedula = async () => {
                 if (resultsms.resultCode == "0") {
                     showForm.value = true
                 } else {
-                    showModal.value = true
+                    showModal.value = 
                     showForm.value = false
                     messageModal.value = 'Error al enviar el SMS Verifica tu numero';
                     titleModal.value = 'Error';

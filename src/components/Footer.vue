@@ -23,7 +23,7 @@
           </div>
    
           <!-- Links de interés -->
-          <div>
+        <!--   <div>
             <h3 class="font-bold text-lg mb-4">De tu interés</h3>
             <ul class="space-y-2">
               <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Legal</a></li>
@@ -32,7 +32,7 @@
               <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Política de tratamiento de datos</a></li>
               <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Términos y condiciones</a></li>
             </ul>
-          </div>
+          </div> -->
         </div>
       </div>
     </footer>

@@ -25,7 +25,7 @@
            :to="`/dash-professional/${userStore.bpCode}`"
             class="px-4 py-2 text-sm font-medium transition-colors text-white"
           >
-            Mi balance
+            Mis puntos
           </router-link>
         </div>
 
@@ -37,17 +37,24 @@
             <span class="text-xs font-medium text-white">Disponible : {{ userStore.puntosDisponibles }}</span>
           </span>
           
-
+          <div  v-else>
           <!-- Mostrar botón "REGISTRARME" si no está autenticado -->
           <router-link
-            v-else
+           
             to="/registro"
             class="px-6 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition-colors duration-200"
           >
-            REGISTRARME
+            Iniciar Sesion
+          </router-link>
+          <router-link
+            
+            to="/resgistro-italparner"
+            class="ml-3 px-6 py-2 bg-red-700 hover:bg-red-800 text-white rounded-lg transition-colors duration-200"
+          >
+            Registrar Italpartner
           </router-link>
         </div>
-
+      </div>
         <!-- Mobile menu button -->
         <div class="md:hidden flex items-center">
           <button
@@ -121,16 +128,26 @@
       
         </span>
         
-
+        <div   v-else>
         <!-- Mostrar botón "REGISTRARME" si no está autenticado -->
         <router-link
-          v-else
+        
           to="/registro"
           class="block w-full text-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 mt-4"
           @click="isOpen = false"
         >
-          REGISTRARME
+          Iniciar Sesion
         </router-link>
+
+        <router-link
+       
+          to="/resgistro-italparner"
+          class="block w-full text-center bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 mt-4"
+          @click="isOpen = false"
+        >
+          Registrar Italpartner
+        </router-link>
+      </div>
       </div>
     </div>
 

@@ -19,13 +19,14 @@
               memorables para que las puedas disfrutar con tu familia.
             </p>
             <p class="text-gray-600 mb-8">
-              Regístrate y empieza a acumular tus puntos hoy mismo si eres italparner <a href="/resgistro-italparner"><b>Aqui</b></a>
+              Si eres supermaestro o Especialista de Es Club y quieres registrarte, dirígete a tu sala de ventas más cercana  <a href="https://www.ceramicaitalia.com/nuestras-tiendas"><b>Aqui</b></a>
+           
             </p>
             <p class="text-gray-600 mb-8">
-              si eres Esclub o Supermaestros, contacta a tu asesor de confianza para que te ayude a registrarte o validas con tu cedula 
+              Si eres Asesor de nuestra red de aliados estratégicos haz click  <a href="/resgistro-italparner"><b>Aqui</b></a> y registrate.
             </p>
             <button @click="handleRegistro" class="bg-gray-900 hover:bg-red-800 text-white px-8 py-3 rounded-lg transition-colors">
-              Ingresa!
+              Iniciar Sesion!
             </button>
 
           
@@ -40,13 +41,8 @@
             </div>
             <h3 class="text-xl font-bold mb-3">Regístrate</h3>
             <p class="text-gray-600">
-              ¿Perteneces a Es Club,
-              Supermaestros O Italparther
-              de Cerámica Italia?
-              ¡Regístrate ahora y haz que
-              cada una de tus compras
-              sume para crear tus
-              experiencias memorables!
+              Si eres supermaestro o Especialista de Es Club y quieres registrarte, dirígete a nuestro punto de fábrica más cercano</p>
+            <p class="text-gray-600">Si eres Asesor de nuestra red de aliados estratégicos haz click en registro Italpartner 
             </p>
           </div>
   
@@ -62,6 +58,7 @@
               puntos de fábrica y/o canales
               digitales de Cerámica Italia te
               ayudarán a acumular puntos.
+              <br> <br>
               Las reglas de acumulación
               dependen de tu plan*
               ¡Revísala con tu asesor de
@@ -78,11 +75,13 @@
               Luego de que tus puntos
               estén cargados en el sistema
               ¡Redimir es muy fácil!
+              <br> <br>
               Ingresa a nuestro sitio web
               italpuntos, revisa el catálogo
               de beneficios que tenemos
               disponible para ti, selecciona
               el que más te guste y listo!
+              <br> <br>
               ¡Recuerda, cada compra
               suma!
             </p>
