@@ -5,7 +5,7 @@
           ¡Inicia sesión y empieza a ganar!
         </div>
         <div class="flex gap-4">
-          <a href="#" class="hover:text-gray-600">Soporte</a>
+          <a href="https://api.whatsapp.com/send?phone=573186072850" class="hover:text-gray-600">Soporte</a>
           <span>|</span>
           <button @click="mostrarFormularioLogin" class="hover:text-gray-600"> {{ usuarioLogueado ? 'Cerrar sesión' : 'Iniciar sesión' }} </button>
           <span>|</span>

@@ -23,16 +23,16 @@
           </div>
    
           <!-- Links de interés -->
-        <!--   <div>
+          <div>
             <h3 class="font-bold text-lg mb-4">De tu interés</h3>
             <ul class="space-y-2">
-              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Legal</a></li>
+             <!--  <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Legal</a></li>
               <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Preguntas frecuentes</a></li>
-              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Quienes somos</a></li>
-              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Política de tratamiento de datos</a></li>
-              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Términos y condiciones</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Quienes somos</a></li>-->
+              <li><a href="https://api.whatsapp.com/send?phone=573186072850" class="text-gray-400 hover:text-white transition-colors">ayuda y soporte</a></li>
+              <li><a href="../assets/Italpuntos.pdf" class="text-gray-400 hover:text-white transition-colors">Términos y condiciones</a></li>
             </ul>
-          </div> -->
+          </div> 
         </div>
       </div>
     </footer>
