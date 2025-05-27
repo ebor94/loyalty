@@ -15,6 +15,7 @@ interface UserState {
   Acumulaciones : Array<any>;
   Redenciones : Array<any>;
   typeUser : string | null;
+  ciudad: string | null; // Opcional, si se necesita
   telefono: string | null; // Opcional, si se necesita
 }
 interface dataItalparner {
@@ -56,6 +57,7 @@ export const useUserStore = defineStore('user', {
     Acumulaciones : [],
     Redenciones: [],	
     typeUser : '',
+    ciudad: '', // Opcional, si se necesita
     telefono: null, // Opcional, si se necesita
   }),
   
@@ -84,12 +86,13 @@ export const useUserStore = defineStore('user', {
      this.getDataUser(this.userCode, this.bpCode);
       
     },
-    saveUserItalparner(userName: string, userCode: string, email: string, telefono : string) {
+    saveUserItalparner(userName: string, userCode: string, email: string, telefono : string, ciudad: string) {
       this.userName = userName;
       this.email = email;
       this.typeUser = 'italpartner';
       this.userCode = userCode;
       this.telefono = telefono;
+      this.ciudad = ciudad; // Asignar un valor por defecto o desde una fuente externa
       console.log("invocó getDataUserItalparner");   
      this.getDataUserItalparner(this.userCode, "2");
       

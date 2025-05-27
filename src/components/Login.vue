@@ -262,6 +262,7 @@ interface ItalparnerInfo {
             Nombre: string;
             Cedula: string;
             Email: string;
+            Ciudad: string;
             Mensaje?: string; // Added Mensaje property
         }>;
     };
@@ -358,7 +359,7 @@ const verificarCedula = async () => {
                 formData.token = generateToken();
                 tokenSesion.value = italparnerInfo.token as string;
                             
-                UserStore.saveUserItalparner(infoParner[0].Nombre, infoParner[0].Cedula, infoParner[0].Email, infoParner[0].Telefono);
+                UserStore.saveUserItalparner(infoParner[0].Nombre, infoParner[0].Cedula, infoParner[0].Email, infoParner[0].Telefono, infoParner[0].Ciudad);
 
                 try {
                     const resultsms = await sendMessage(formData.telIncryp, `ingresa este token  ${formData.token}, para el inicio de sesión Italpuntos`);

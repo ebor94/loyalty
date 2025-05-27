@@ -232,7 +232,8 @@ const formatCurrency = (value: number): string => {
 }
 
 const cargarFacturas = () => {  
-  const url = `https://synergy.ceramicaitalia.com:444/Web/docs/WflRequest_Web.aspx?BCAction=0&Type=752&FreeTextField_14=Italparnerts&FreeIntField_02=${UserStore.userCode}&ReturnTo=https://italpuntos.ceramicaitalia.com/thanks-italparner` 
+  const url = `https://synergy.ceramicaitalia.com:444/Web/docs/WflRequest_Web.aspx?BCAction=0&Type=752&FreeTextField_14=Italparnerts&FreeTextField_01=${UserStore.userName}&FreeTextField_02=${UserStore.userCode}&FreeTextField_03=${UserStore.email}&FreeTextField_04=${UserStore.telefono}&FreeTextField_06=${UserStore.ciudad}&ReturnTo=https://italpuntos.ceramicaitalia.com/thanks-italparner`
+   //`https://synergy.ceramicaitalia.com:444/Web/docs/WflRequest_Web.aspx?BCAction=0&Type=752&FreeTextField_14=Italparnerts&FreeIntField_02=${UserStore.userCode}&ReturnTo=https://italpuntos.ceramicaitalia.com/thanks-italparner` 
   //          'https://synergy.ceramicaitalia.com:444/Web/docs/WflRequest_Web.aspx?BCAction=0&Type=752&FreeTextField_14=Italparnerts&ReturnTo=https://italpuntos.ceramicaitalia.com/thanks-italparner';  
   window.location.href = url;  
 }
