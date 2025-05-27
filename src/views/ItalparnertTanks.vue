@@ -79,9 +79,10 @@
 </template>
 
 <script setup lang="ts">
+import router from '../router';
+
 
 const cargarFacturas = () => {  
-  const url = 'https://synergy.ceramicaitalia.com:444/Web/docs/WflRequest_Web.aspx?BCAction=0&Type=752&FreeTextField_14=Italparnerts&ReturnTo=https://italpuntos.ceramicaitalia.com';  
-  window.location.href = url;  
+    router.back()
 }
 </script>
