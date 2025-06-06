@@ -55,7 +55,7 @@
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pedido</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Solicitud</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Comisión</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
               </tr>
@@ -66,7 +66,7 @@
                 <td class="px-6 py-4">{{ sale.nombre }}</td>
                 <td class="px-6 py-4">{{ sale.documento }}</td>
 
-                <td class="px-6 py-4">{{ formatCurrency(sale.margenaliado) }}</td>
+                <td class="px-6 py-4">{{ sale.margenaliado}}</td>
                 <td class="px-6 py-4">
                   <span :class="getStatusClass(sale.aprobcte)">
                     {{ sale.aprobcte == "1" ? "Aprobado" : 'Pendiente' }}
@@ -75,15 +75,15 @@
               </tr>
             </tbody>
             <tbody class="divide-y divide-gray-200" v-else> 
-              <tr v-for="sale in salesItalparner" :key="sale.consecutivo">
-                <td class="px-6 py-4">{{ sale.fecharegistro }}</td>
-                <td class="px-6 py-4">{{ sale.nombre }}</td>
-                <td class="px-6 py-4">{{ sale.documento }}</td>
+              <tr v-for="sale in salesItalparner" :key="sale.NumeroFlujo">
+                <td class="px-6 py-4">{{ sale.FechaFlujo }}</td>
+                <td class="px-6 py-4">{{ sale.Nombre }}</td>
+                <td class="px-6 py-4">{{ sale.NumeroFlujo }}</td>
 
-                <td class="px-6 py-4">{{ formatCurrency(sale.margenaliado) }}</td>
+                <td class="px-6 py-4">{{ sale.PuntosObtenidos }}</td>
                 <td class="px-6 py-4">
-                  <span :class="getStatusClass(sale.aprobcte)">
-                    {{ sale.aprobcte == "1" ? "Aprobado" : 'Pendiente' }}
+                  <span :class="getStatusClass(sale.Estado)">
+                    {{ sale.Estado  }}
                   </span>
                 </td>
               </tr>
@@ -189,6 +189,15 @@ interface Sale {
   aprobcte: '1' | '0' | ''
 }
 
+interface SaleItalparner {
+  NumeroFlujo: number
+  FechaFlujo: string
+  Nombre: string
+  Cedula: string
+  PuntosObtenidos: number
+  Estado: string
+}
+
 interface Redemption {
   idGiftcard: string
   fechaRegistro: string
@@ -214,7 +223,7 @@ const stats = ref<Stats>({
 
 
 const sales = ref<Sale[]>(UserStore.Acumulaciones)
-const salesItalparner = ref<Sale[]>(UserStore.Acumulaciones)
+const salesItalparner = ref<SaleItalparner[]>(UserStore.Acumulaciones)
 
 const redemptions = ref<Redemption[]>()
 
@@ -232,12 +241,18 @@ const formatCurrency = (value: number): string => {
 }
 
 const cargarFacturas = () => {  
+  localStorage.setItem('userCode', UserStore.userCode as string)
+  localStorage.setItem('userName', UserStore.userName as string)  
+  localStorage.setItem('email', UserStore.email as string)
+  localStorage.setItem('telefono', UserStore.telefono as string)
+  localStorage.setItem('ciudad', UserStore.ciudad as string)
+  
   const url = `https://synergy.ceramicaitalia.com:444/Web/docs/WflRequest_Web.aspx?BCAction=0&Type=752&FreeTextField_14=Italparnerts&FreeTextField_01=${UserStore.userName}&FreeTextField_02=${UserStore.userCode}&FreeTextField_03=${UserStore.email}&FreeTextField_04=${UserStore.telefono}&FreeTextField_06=${UserStore.ciudad}&ReturnTo=https://italpuntos.ceramicaitalia.com/thanks-italparner`
    //`https://synergy.ceramicaitalia.com:444/Web/docs/WflRequest_Web.aspx?BCAction=0&Type=752&FreeTextField_14=Italparnerts&FreeIntField_02=${UserStore.userCode}&ReturnTo=https://italpuntos.ceramicaitalia.com/thanks-italparner` 
   //          'https://synergy.ceramicaitalia.com:444/Web/docs/WflRequest_Web.aspx?BCAction=0&Type=752&FreeTextField_14=Italparnerts&ReturnTo=https://italpuntos.ceramicaitalia.com/thanks-italparner';  
   window.location.href = url;  
 }
-const getStatusClass = (status: Sale['aprobcte']): string => {
+const getStatusClass = (status: string ): string => {
   const baseClasses = 'px-2 py-1 rounded-full text-xs font-medium'
   switch (status) {
     case '':
@@ -246,6 +261,10 @@ const getStatusClass = (status: Sale['aprobcte']): string => {
       return `Confirmada bg-green-100 text-green-800`
     case '0':
       return `Rechazada bg-red-100 text-red-800`
+    case 'Aprobado':
+      return `Confirmada bg-green-100 text-green-800`
+    case 'Abierto':
+      return `Pendiente bg-yellow-100 text-yellow-800`
     default:
       return baseClasses
   }

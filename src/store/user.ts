@@ -43,6 +43,33 @@ interface ItalparnerAcumulado {
   };
 }
 
+// Función para formatear números con máximo 3 decimales
+const formatearNumero = (valor: any): number => {
+  // Si ya es un número, formatearlo directamente
+  if (typeof valor === 'number') {
+    return Math.round(valor * 1000) / 1000;
+  }
+  
+  // Si es string, limpiar el formato
+  let valorLimpio = valor?.toString() || '0';
+  
+  // Remover comas (separadores de miles)
+  valorLimpio = valorLimpio.replace(/,/g, '');
+  
+  // Convertir a número
+  const numero = Number(valorLimpio);
+  
+  //console.log("valor original:", valor, "valor limpio:", valorLimpio, "numero final:", numero);
+  
+  // Si no es un número válido, retornar 0
+  if (isNaN(numero)) {
+    return 0;
+  }
+  
+  // Formatear con máximo 3 decimales
+  return Math.round(numero * 1000) / 1000;
+}
+
 export const useUserStore = defineStore('user', {
   state: (): UserState => ({
     token: null,
@@ -93,7 +120,7 @@ export const useUserStore = defineStore('user', {
       this.userCode = userCode;
       this.telefono = telefono;
       this.ciudad = ciudad; // Asignar un valor por defecto o desde una fuente externa
-      console.log("invocó getDataUserItalparner");   
+      //console.log("invocó getDataUserItalparner");   
      this.getDataUserItalparner(this.userCode, "2");
       
     },
@@ -114,27 +141,28 @@ export const useUserStore = defineStore('user', {
     }
     ,
     async getDataUserItalparner(cc: string, Bandera:string){
-     // console.log("va a consultar synergy", cc , Bandera);      
       const dataItalparner = await italparner.getBalance(cc,Bandera) as dataItalparner; 
       const AcumulacionesItalparner = await italparner.getBalance(cc,"4") as ItalparnerAcumulado;   
-       //console.log(AcumulacionesItalparner.data.data)  
-       this.PuntosRedimidos =  Number(dataItalparner.data.data[0].PRedimidos? dataItalparner.data.data[0].PRedimidos : 0);
-       this.puntosAcumulados = Number(dataItalparner.data.data[0].PObtenidos? dataItalparner.data.data[0].PObtenidos : 0);
-       this.puntosDisponibles = Number(dataItalparner.data.data[0].PPendientes? dataItalparner.data.data[0].PPendientes : 0);
-       let acumuItalparner = AcumulacionesItalparner.data.data as Array<any>;
-       this.Acumulaciones = acumuItalparner //acumuItalparner.filter((item:any) => item.Estado === 'Aprobado')
-      // const balance = await Cupon.getGiftcardBought(usercode);
-      // this.Acumulaciones =  data.filter((item:any) => item.aprobcte === '1')      
-      // this.Redenciones = balance.data;
-      // this.PuntosRedimidos =  this.Redenciones.reduce((sum, item) => sum + item.valor, 0);
-      // this.puntosAcumulados = data.reduce((sum : number, item : any) =>  item.aprobcte === '1' ? sum + item.margenaliado : sum, 0);
-      // this.puntosDisponibles = this.puntosAcumulados - this.PuntosRedimidos
-      // this.puntosDisponibles = this.puntosDisponibles < 0 ? 0 : this.puntosDisponibles
-         
-
+      
+      //console.log("AcumulacionesItalparner",AcumulacionesItalparner.data.data)
+      //console.log("dataItalparner",dataItalparner.data)  
+     // console.log("PObtenidos",dataItalparner.data.data[0].PPendientes)   
+      
+      // Aplicar formateo a los números
+      this.PuntosRedimidos = dataItalparner.data.data[0].PRedimidos as number;
+      this.PuntosRedimidos = formatearNumero(this.PuntosRedimidos);
+      this.puntosAcumulados = dataItalparner.data.data[0].PObtenidos  as number;
+      this.puntosAcumulados = formatearNumero(this.puntosAcumulados);
+      this.puntosDisponibles = this.puntosAcumulados - this.PuntosRedimidos
+      this.puntosDisponibles = this.puntosDisponibles < 0 ? 0 : this.puntosDisponibles
+      
+      let acumuItalparner = AcumulacionesItalparner.data.data as Array<any>;
+      this.Acumulaciones = acumuItalparner
     },
+    
     updateDataUserItalparner(cc: string, puntosRedimidos: number) {
       this.puntosDisponibles = this.puntosDisponibles - puntosRedimidos
     }
   },
 });
+

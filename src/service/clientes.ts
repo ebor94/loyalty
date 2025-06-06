@@ -140,7 +140,7 @@ export const italparner = {
     }
   },
   async getBalance(cc: string, Bandera:string): Promise<object> {
-    console.log("va a consultar synergy", cc , Bandera);
+    //console.log("va a consultar synergy", cc , Bandera);
     try {     
       const response = await axios.get(`${domain}/clientes/italpuntos/balance-italparner/${cc}/${Bandera}`);
       return response.data;

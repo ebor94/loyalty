@@ -283,6 +283,7 @@ const generateToken = () => {
     for (let i = 0; i < 5; i++) {
         token += Math.floor(Math.random() * 10);
     }
+    //console.log(token)
     return token;
 }
 
@@ -310,7 +311,7 @@ const verificarToken = async () => {
             UserStore.setToken(formData.token, sessionToken.tokenSesion)
         }
 
-        router.push(`dash-professional/${UserStore.bpCode}`)
+        router.push(`dash-professional/${UserStore.bpCode || UserStore.userCode}`);
     } else {
         showModal.value = true;
         messageModal.value = 'El token es incorrecto';

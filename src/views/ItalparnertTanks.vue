@@ -79,10 +79,22 @@
 </template>
 
 <script setup lang="ts">
-import router from '../router';
+import { useUserStore } from '../store/user';
 
+
+
+const UserStore = useUserStore();
 
 const cargarFacturas = () => {  
-    router.back()
+  UserStore.userName = localStorage.getItem('userName') || '';
+  UserStore.userCode = localStorage.getItem('userCode') || '';
+  UserStore.email = localStorage.getItem('email') || '';
+  UserStore.telefono = localStorage.getItem('telefono') || '';
+  UserStore.ciudad = localStorage.getItem('ciudad') || '';
+  
+  const url = `https://synergy.ceramicaitalia.com:444/Web/docs/WflRequest_Web.aspx?BCAction=0&Type=752&FreeTextField_14=Italparnerts&FreeTextField_01=${UserStore.userName}&FreeTextField_02=${UserStore.userCode}&FreeTextField_03=${UserStore.email}&FreeTextField_04=${UserStore.telefono}&FreeTextField_06=${UserStore.ciudad}&ReturnTo=https://italpuntos.ceramicaitalia.com/thanks-italparner`
+   //`https://synergy.ceramicaitalia.com:444/Web/docs/WflRequest_Web.aspx?BCAction=0&Type=752&FreeTextField_14=Italparnerts&FreeIntField_02=${UserStore.userCode}&ReturnTo=https://italpuntos.ceramicaitalia.com/thanks-italparner` 
+  //          'https://synergy.ceramicaitalia.com:444/Web/docs/WflRequest_Web.aspx?BCAction=0&Type=752&FreeTextField_14=Italparnerts&ReturnTo=https://italpuntos.ceramicaitalia.com/thanks-italparner';  
+  window.location.href = url;  
 }
 </script>
