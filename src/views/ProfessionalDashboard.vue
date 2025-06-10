@@ -82,9 +82,28 @@
 
                 <td class="px-6 py-4">{{ sale.PuntosObtenidos }}</td>
                 <td class="px-6 py-4">
-                  <span :class="getStatusClass(sale.Estado)">
-                    {{ sale.Estado  }}
+                  <div  v-if="sale.PuntosObtenidos === 0 && sale.Estado == 'Aprobado'" >
+                    <span :class="getStatusClass('Rechazado')" >
+                    <span>{{ getStatusIcon("Rechazado") }}</span>
+                    {{ getStatusText("Rechazado") }}
                   </span>
+                  </div>
+                  <span :class="getStatusClass(sale.Estado)" v-else>
+                    <span>{{ getStatusIcon(sale.Estado) }}</span>
+                    {{ getStatusText(sale.Estado) }}
+                  </span>
+                  <div  v-if="sale.PuntosObtenidos === 0 && sale.Estado == 'Aprobado'" class="text-xs text-gray-500 px-2 py-2 ml-4">
+                    <button @click="ObservacionFlujo(sale.Observacion)"
+                      class="bg-red-600 text-white px-3 py-1.5 rounded-md hover:bg-red-700 transition-colors duration-200 flex items-center justify-center group"
+                      title="Ver detalles">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    </button>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -142,7 +161,7 @@
       </div>
       <div class="p-6" v-if="typeUser == 'italpartner'">       
         <button @click="cargarFacturas"
-          class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center space-x-2">
+          class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-all duration-300 flex items-center space-x-2">
           <span>Cargar Facturas</span>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -165,6 +184,7 @@ import TopBar from '../components/TopBar.vue';
 import Header from '../components/Header.vue';
 import Footer from '../components/Footer.vue';
 import { useRouter } from 'vue-router'
+import Swal from 'sweetalert2';
 const router = useRouter()
 const UserStore = useUserStore();
 const typeUser = ref(UserStore.typeUser)
@@ -196,6 +216,7 @@ interface SaleItalparner {
   Cedula: string
   PuntosObtenidos: number
   Estado: string
+  Observacion: string
 }
 
 interface Redemption {
@@ -240,6 +261,15 @@ const formatCurrency = (value: number): string => {
   }).format(value)
 }
 
+const ObservacionFlujo = (observacion : string) => {
+  Swal.fire({
+        title: 'Tu solicitud ',
+        text: `${observacion}`,
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      });
+}
+
 const cargarFacturas = () => {  
   localStorage.setItem('userCode', UserStore.userCode as string)
   localStorage.setItem('userName', UserStore.userName as string)  
@@ -252,21 +282,53 @@ const cargarFacturas = () => {
   //          'https://synergy.ceramicaitalia.com:444/Web/docs/WflRequest_Web.aspx?BCAction=0&Type=752&FreeTextField_14=Italparnerts&ReturnTo=https://italpuntos.ceramicaitalia.com/thanks-italparner';  
   window.location.href = url;  
 }
-const getStatusClass = (status: string ): string => {
-  const baseClasses = 'px-2 py-1 rounded-full text-xs font-medium'
+const getStatusClass = (status: string): string => {
+  const baseClasses = 'px-3 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 shadow-sm'
+  
   switch (status) {
     case '':
-      return `Pendiente bg-yellow-100 text-yellow-800`
+    case 'Pendiente':
+      return `${baseClasses} bg-yellow-50 text-yellow-700 border border-yellow-200`
     case '1':
-      return `Confirmada bg-green-100 text-green-800`
-    case '0':
-      return `Rechazada bg-red-100 text-red-800`
     case 'Aprobado':
-      return `Confirmada bg-green-100 text-green-800`
-    case 'Abierto':
-      return `Pendiente bg-yellow-100 text-yellow-800`
+      return `${baseClasses} bg-green-50 text-green-700 border border-green-200`
+    case '0':
+    case 'Rechazado':
+      return `${baseClasses} bg-red-50 text-red-700 border border-red-200`
     default:
-      return baseClasses
+      return `${baseClasses} bg-gray-50 text-gray-600 border border-gray-200`
+  }
+}
+
+const getStatusText = (status: string): string => {
+  switch (status) {
+    case '':
+    case 'Pendiente':
+      return 'Pendiente'
+    case '1':
+    case 'Aprobado':
+      return 'Aprobado'
+    case '0':
+      return 'Rechazado'
+    default:
+      return status
+  }
+}
+
+const getStatusIcon = (status: string): string => {
+  switch (status) {
+    case '':
+    case 'Pendiente':
+      return '⏳'
+    case '1':
+    case 'Aprobado':
+      return '✅'
+    case '0':
+      return '❌'
+    case 'Rechazado':
+      return '❌'
+    default:
+      return '❓'
   }
 }
 

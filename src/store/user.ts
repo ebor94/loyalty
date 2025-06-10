@@ -132,7 +132,7 @@ export const useUserStore = defineStore('user', {
       this.PuntosRedimidos =  this.Redenciones.reduce((sum, item) => sum + item.valor, 0);
       this.puntosAcumulados = data.reduce((sum : number, item : any) =>   sum + item.margeninterno , 0);
       this.puntosDisponibles = this.puntosAcumulados - this.PuntosRedimidos
-      this.puntosDisponibles = this.puntosDisponibles < 0 ? 0 : this.puntosDisponibles
+      this.puntosDisponibles = this.puntosDisponibles < 0 ? 0 : this.puntosDisponibles - this.PuntosRedimidos
          
 
     },
@@ -143,9 +143,10 @@ export const useUserStore = defineStore('user', {
     async getDataUserItalparner(cc: string, Bandera:string){
       const dataItalparner = await italparner.getBalance(cc,Bandera) as dataItalparner; 
       const AcumulacionesItalparner = await italparner.getBalance(cc,"4") as ItalparnerAcumulado;   
-      
-      //console.log("AcumulacionesItalparner",AcumulacionesItalparner.data.data)
-      //console.log("dataItalparner",dataItalparner.data)  
+      const balance = await Cupon.getGiftcardBought(cc);
+       this.Redenciones = balance.data;
+      //console.log(balance )
+      //console.log(this.Redenciones)  
      // console.log("PObtenidos",dataItalparner.data.data[0].PPendientes)   
       
       // Aplicar formateo a los números
@@ -154,7 +155,7 @@ export const useUserStore = defineStore('user', {
       this.puntosAcumulados = dataItalparner.data.data[0].PObtenidos  as number;
       this.puntosAcumulados = formatearNumero(this.puntosAcumulados);
       this.puntosDisponibles = this.puntosAcumulados - this.PuntosRedimidos
-      this.puntosDisponibles = this.puntosDisponibles < 0 ? 0 : this.puntosDisponibles
+      this.puntosDisponibles = this.puntosDisponibles < 0 ? 0 : this.puntosDisponibles - this.PuntosRedimidos
       
       let acumuItalparner = AcumulacionesItalparner.data.data as Array<any>;
       this.Acumulaciones = acumuItalparner

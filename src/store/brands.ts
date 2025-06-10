@@ -22,7 +22,7 @@ export const useStoreStore = defineStore('store', () => {
    loading.value = true
    try {
    
-    
+    if (categories.value.length <= 0) {
      const response = await fetch("https://lilix.ceramicaitalia.com:3001/clientes/italpuntos/CuponList", {method: "POST", redirect: "follow"})
      let  brands = await response.json();
      stores.value = brands.data.data ;
@@ -30,6 +30,7 @@ export const useStoreStore = defineStore('store', () => {
      const nombresCategorias = stores.value.map(store => store.categoria);
      const categoriasUnicas = [...new Set(nombresCategorias)].map(nombre => ({ name: nombre }));
      categories.value = categoriasUnicas;
+    }
    } catch (e) {
      error.value = 'Error loading stores'
    } finally {
