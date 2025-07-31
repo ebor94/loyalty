@@ -1,7 +1,6 @@
 import axios from "axios";
-import { useUserStore } from '../store/user';
+
 const domain = "https://lilix.ceramicaitalia.com:3001";
-const userData = useUserStore();
 
 
 export const cliente = {
@@ -134,7 +133,8 @@ export const italparner = {
     try {
       const response = await axios.get(`${domain}/clientes/italpuntos/consultarItalparner/${cc}`, {
         headers: {
-          'Authorization': `Bearer ${userData.TokenSession}`,
+          'Authorization': `Bearer ${localStorage.getItem('TokenSession')}`,
+          
           'accept': '*/*'
         }
       });
@@ -152,7 +152,7 @@ export const italparner = {
     try {
       const response = await axios.get(`${domain}/clientes/italpuntos/balance-italparner/${cc}/${Bandera}`, {
         headers: {
-          'Authorization': `Bearer ${userData.TokenSession}`,
+       'Authorization': `Bearer ${localStorage.getItem('TokenSession')}`,
           'accept': '*/*'
         }
       });
@@ -185,7 +185,7 @@ export const italparner = {
         data,
         {
           headers: {
-            'Authorization': `Bearer ${userData.TokenSession}`,
+         'Authorization': `Bearer ${localStorage.getItem('TokenSession')}`,
             'Content-Type': 'application/json',
             'accept': '*/*'
           }

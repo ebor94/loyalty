@@ -1,9 +1,6 @@
 import axios from "axios";
 const domain = "https://lilix.ceramicaitalia.com:3001";
 
-import { useUserStore } from '../store/user';
-const userData = useUserStore();
-
 export const Cupon = {
   async getGifCard(id: string): Promise<any> {
     try {
@@ -62,7 +59,7 @@ export const Cupon = {
         maxBodyLength: Infinity,
         url: `${domain}/clientes/italpuntos/buygifcard/`,
          headers: {
-            'Authorization': `Bearer ${userData.TokenSession}`,
+            'Authorization': `Bearer ${localStorage.getItem('TokenSession')}`,
             'Content-Type': 'application/json',
             'accept': '*/*'
           },

@@ -99,6 +99,7 @@ export const useUserStore = defineStore('user', {
     setToken(token: string, TokenSession: string) {
       this.token = token;
       this.TokenSession = TokenSession;
+       localStorage.setItem('TokenSession', TokenSession);
     },
     clearToken() {
       this.token = null;
