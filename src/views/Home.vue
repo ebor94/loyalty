@@ -11,8 +11,18 @@
       <CallToAction />
      <!--  <Testimonial></Testimonial> -->
       <Footer></Footer>
-    </div>
-  </template>
+
+       <!-- <Modal 
+      :showModal="showModal" 
+      title="Comunicado" 
+      message="" 
+      image="/assets/img/comunicado-italpuntos.jpg" 
+      imageAlt="Comunicado Italpuntos" 
+      @confirm="handleConfirm" 
+      @cancel="handleCancel" 
+    /> -->
+  </div>
+ </template>
   
   <script setup lang="ts">
 // @ts-ignore
@@ -31,8 +41,9 @@
     // @ts-ignore
   import Testimonial from '../components/Testimonial.vue'
   import Footer from '../components/Footer.vue'
-  import {ref} from 'vue';
-
+  import {onMounted, ref} from 'vue';
+import Modal from '../components/Modal.vue'
+const showModal = ref(false);
   const mostrarLogin = ref(false);
 const mostrarRegistro = ref(false);
 const toggleMostrarLogin = () => {
@@ -40,5 +51,20 @@ const toggleMostrarLogin = () => {
   mostrarRegistro.value = false; // Ocultar registro si se muestra login
 
 };
+
+const handleConfirm = () => {
+  console.log('Usuario confirmó');
+  showModal.value = false;
+};
+
+const handleCancel = () => {
+  console.log('Usuario canceló');
+  showModal.value = false;
+};
+
+// Mostrar el modal cuando el componente se monte
+onMounted(() => {
+  showModal.value = true;
+});
 
  </script>

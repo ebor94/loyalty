@@ -89,7 +89,7 @@
                                     class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                                     @click="handlePurchase(stock)">
                                     Redimir
-                                </button>
+                                </button> 
                             </div>
                         </div>
                     </div>
@@ -133,11 +133,13 @@ import Modal from '../components/Modal.vue';
 //@ts-ignore
 import Loader from '../components/Loader.vue';
 
+
 const isLoading = ref(false);
 const mostrarLogin = ref(false);
 const mostrarRegistro = ref(false);
 const userData = useUserStore();
 const giftCard = useStoreGiftcard();
+const contador = ref(0);
 
 const toggleMostrarLogin = () => {
     mostrarLogin.value = !mostrarLogin.value;
@@ -213,6 +215,15 @@ const handleImageError = (event: Event): void => {
 const handlePurchase = async (stock: Stock): Promise<void> => {
     isLoading.value = true; // Mostrar el loader
     try {
+        contador.value++;
+        if (contador.value > 1) {
+            showModal.value = !showModal.value;
+            messageModal.value = 'Ya has solicitado una redención, por favor espera a que se procese.';
+            titleModal.value = 'Validación';
+            return;
+        }
+
+
       
         // validar puntos disponibles antes de solicitar redencion 
         if (userData.puntosDisponibles >= stock.valor) {
@@ -220,7 +231,7 @@ const handlePurchase = async (stock: Stock): Promise<void> => {
 
             let buyGif = null;
             if(userData.typeUser === 'italpartner'){        
-                 buyGif = await Cupon.buyGifcard(`${storeData.value.info.id}`, userData.userCode, userData.userCode, userData.userName, stock.valor);
+                 buyGif = await Cupon.buyGifcard(`${storeData.value.info.id}`, userData.userCode, userData.typeUser, userData.userName, stock.valor);
            
             }else{
                  buyGif = await Cupon.buyGifcard(`${storeData.value.info.id}`, userData.userCode, userData.bpCode, userData.userName, stock.valor);
@@ -228,30 +239,53 @@ const handlePurchase = async (stock: Stock): Promise<void> => {
             }
 
 
+            console.log(buyGif)
 
-           if (!buyGif.success) {
+          if (!buyGif.success || buyGif === null || buyGif === undefined) {
                 showModal.value = !showModal.value;
-                messageModal.value = '!Presentamos problemas para tus compras, intenta luego'
+                messageModal.value = '!Presentamos problemas De Redencion, intenta luego'
                 titleModal.value = 'Error'
                 return
             };
-            if (buyGif.data.status === 'error') {
-                switch (buyGif.data.code) {
-                    case 'E121':
-                        messageModal.value = 'Error: ' + buyGif.data.message;
-                        break;
-                    // Puedes agregar más casos según los códigos de error que manejes
-                    default:
-                        messageModal.value = '!Presentamos problemas para tus compras, intenta luego'
-                }
-                showModal.value = !showModal.value;                
+
+            if (buyGif.data === null || buyGif.data === undefined) {
+                showModal.value = !showModal.value;
+                messageModal.value = '!Presentamos problemas De Redencion, intenta luego'
                 titleModal.value = 'Error'
                 return
+            };
+
+            if (buyGif.message !== 'Gift card adquirida exitosamente') {
+                showModal.value = !showModal.value;
+                messageModal.value = buyGif.message  || 'Error al procesar la redención';
+                titleModal.value = 'Error';
+                return;
             }
-            giftCard.saveGiftcard(buyGif.data.clave, buyGif.data.codigo, buyGif.data.empresa, buyGif.data.fechaExpiracionTicket, buyGif.data.hashPdf, buyGif.data.idGiftcard, buyGif.data.nombreEmpresa, buyGif.data.status, buyGif.data.url, buyGif.data.userCode, buyGif.data.valor);
-            //si es exitoso actualizar los puntos disponibles 
-            if(userData.typeUser === 'italpartner'){        
-                userData.updateDataUserItalparner(userData.userCode as string, stock.valor)
+
+            // Guardar la gift card en el store
+            const savegifsy = giftCard.saveGiftcard(
+                buyGif.data.clave,
+                buyGif.data.codigo,
+                buyGif.data.empresa,
+                buyGif.data.fechaExpiracionTicket,
+                buyGif.data.hashPdf,
+                buyGif.data.idGiftcard,
+                buyGif.data.nombreEmpresa,
+                buyGif.data.status,
+                buyGif.data.url,
+                buyGif.data.userCode,
+                buyGif.data.valor
+            );
+
+            
+            if(userData.typeUser === 'italpartner'){    
+                let nuevoSaldo = 0;
+                if ( buyGif.balanceNumberAfter === undefined || buyGif.balanceNumberAfter === null  ) {                    
+                    nuevoSaldo = userData.puntosDisponibles - stock.valor;
+                } else {
+                    nuevoSaldo = buyGif.balanceNumberAfter;
+                }
+                userData.updateDataUserItalparner(userData.userCode as string, nuevoSaldo)
            
             }else{
                 userData.updateDataUser(userData.userCode as string, userData.bpCode as string, stock.valor)
@@ -272,6 +306,7 @@ const handlePurchase = async (stock: Stock): Promise<void> => {
         titleModal.value = 'Error De Comunicacion'
     } finally {
         isLoading.value = false; // Ocultar el loader
+        contador.value = 0; // Reiniciar contador
     }
 };
 

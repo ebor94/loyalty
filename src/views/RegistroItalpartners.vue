@@ -276,6 +276,7 @@ const btnValidaCliente = async () => {
     msg.cedula = '';
     isLoading.value = true;
     const response = await italparner.getInfo(cedula.value) as ItalpartnerResponse;
+    console.log(response)
     if (response?.data?.data && Array.isArray(response.data.data) && response.data.data[0].Cedula == cedula.value) {
 
       Swal.fire({
@@ -355,9 +356,9 @@ const Registrar = async () => {
       });
     } else {
       Swal.fire({
-        title: 'Error al registrar',
-        text: 'Hubo un error al registrar tus datos, por favor intenta de nuevo',
-        icon: 'error',
+        title: 'RESPUESTA',
+        text: `${response.data.data.data[0].Mensaje}`,
+         icon: 'info',
         confirmButtonText: 'Aceptar'
       });
     }

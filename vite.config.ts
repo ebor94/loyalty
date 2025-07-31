@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   // Configuración para subdirectorio
-  base: '/italpuntos/',
+  base: '/',
   optimizeDeps: {  
     include: ['html2pdf.js']  
   },

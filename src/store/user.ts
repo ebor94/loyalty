@@ -110,6 +110,7 @@ export const useUserStore = defineStore('user', {
       this.userCode = userCode;
       this.typeUser = 'other';
       this.email = email;
+      console.log("invocó getDataUser");   
      this.getDataUser(this.userCode, this.bpCode);
       
     },
@@ -126,14 +127,39 @@ export const useUserStore = defineStore('user', {
     },
     async getDataUser(usercode: string, bpCode: string){
       const data = await cliente.getDataloyalty(usercode,'','14',usercode,0)
+     
       const balance = await Cupon.getGiftcardBought(usercode);
+       
       this.Acumulaciones =  data.filter((item:any) => item.aprobcte === '1')      
       this.Redenciones = balance.data;
-      this.PuntosRedimidos =  this.Redenciones.reduce((sum, item) => sum + item.valor, 0);
-      this.puntosAcumulados = data.reduce((sum : number, item : any) =>   sum + item.margeninterno , 0);
-      this.puntosDisponibles = this.puntosAcumulados - this.PuntosRedimidos
-      this.puntosDisponibles = this.puntosDisponibles < 0 ? 0 : this.puntosDisponibles - this.PuntosRedimidos
-         
+      console.log("Datos redenciones:", this.Redenciones);
+
+      // Opción 1: Verificación con optional chaining
+      //this.PuntosRedimidos = this.Redenciones.reduce((sum, item) => sum + item.valor, 0);
+      //let PuntosRedimidosFormatted = new Intl.NumberFormat('es-CO').format(this.PuntosRedimidos);
+      //this.PuntosRedimidos = formatearNumero(PuntosRedimidosFormatted);
+      //console.log("Puntos redimidos:", this.PuntosRedimidos);
+
+
+      if (data && Array.isArray(data)) {
+           this.puntosAcumulados = (data || []).reduce((sum: number, item: any) => {
+            return sum + (item.margeninterno || 0);
+        }, 0);
+      } else {
+          console.log('Data is null, undefined or not an array');
+          this.puntosAcumulados = 0;
+      }
+
+    // let puntosAcumuladosFormatted = new Intl.NumberFormat('es-CO').format(this.puntosAcumulados);
+    // this.puntosAcumulados =  formatearNumero(puntosAcumuladosFormatted);
+    //this.puntosDisponibles = this.puntosAcumulados - this.PuntosRedimidos
+
+        this.PuntosRedimidos = (this.Redenciones || []).reduce((sum, item) => sum + item.valor, 0);
+
+        // 2. Calcular disponible con números puros
+        this.puntosDisponibles = this.puntosAcumulados - this.PuntosRedimidos;
+
+
 
     },
     updateDataUser(usercode: string, bpCode: string, puntosRedimidos: number) {
@@ -154,15 +180,18 @@ export const useUserStore = defineStore('user', {
       this.PuntosRedimidos = formatearNumero(this.PuntosRedimidos);
       this.puntosAcumulados = dataItalparner.data.data[0].PObtenidos  as number;
       this.puntosAcumulados = formatearNumero(this.puntosAcumulados);
-      this.puntosDisponibles = this.puntosAcumulados - this.PuntosRedimidos
-      this.puntosDisponibles = this.puntosDisponibles < 0 ? 0 : this.puntosDisponibles - this.PuntosRedimidos
+      this.puntosDisponibles = this.puntosAcumulados - this.PuntosRedimidos || 0;
+      if(this.puntosDisponibles < 0) {
+        this.puntosDisponibles = 0;
+      }
+      //this.puntosDisponibles = this.puntosDisponibles < 0 ? 0 : this.puntosDisponibles - this.PuntosRedimidos
       
       let acumuItalparner = AcumulacionesItalparner.data.data as Array<any>;
       this.Acumulaciones = acumuItalparner
     },
     
     updateDataUserItalparner(cc: string, puntosRedimidos: number) {
-      this.puntosDisponibles = this.puntosDisponibles - puntosRedimidos
+      this.puntosDisponibles = puntosRedimidos
     }
   },
 });

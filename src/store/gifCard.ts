@@ -48,8 +48,8 @@ export const useStoreGiftcard = defineStore('giftcard',{
             this.userCode             = userCode             ;
             this.valor                = valor                ;
 
-            const data = await Cupon.saveGiftCardBought(this.clave , this.codigo, this.empresa,this.fechaExpiracionTicket,this.hashPdf,this.idGiftcard,this.nombreEmpresa,this.status,this.url,this.userCode,this.valor)
-            console.log(data)
+            //const data = await Cupon.saveGiftCardBought(this.clave , this.codigo, this.empresa,this.fechaExpiracionTicket,this.hashPdf,this.idGiftcard,this.nombreEmpresa,this.status,this.url,this.userCode,this.valor)
+            //console.log(data)
         },
         clearGiftCard(){
             this.clave                 = '';

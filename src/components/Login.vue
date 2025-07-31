@@ -343,7 +343,7 @@ const verificarCedula = async () => {
         isLoading.value = true
         if (formData.checkItalParner == 'italpartner') {
             const italparnerInfo = await italparner.getInfo(formData.cedula) as ItalparnerInfo;
-            //console.log(italparnerInfo);
+            console.log(italparnerInfo);
 
             if (italparnerInfo.success) {
                 if (italparnerInfo.data.data[0].Mensaje == 'Italparner no se encuentra creado') {
