@@ -223,6 +223,12 @@ const handlePurchase = async (stock: Stock): Promise<void> => {
             return;
         }
 
+        if(userData.puntosDisponibles <= 0) {
+               showModal.value = !showModal.value;
+            messageModal.value = 'Saldo insuficiente para redimir'
+            titleModal.value = 'Validacion'
+            return
+        }
 
       
         // validar puntos disponibles antes de solicitar redencion 

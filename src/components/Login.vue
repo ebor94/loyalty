@@ -153,10 +153,19 @@
                 </div>
 
                 <div class="w-full md:w-1/2">
-                    <img src="/src/assets/img/imagen-registro.jpg" alt="Registration"
-                        class="w-full h-full object-cover" />
+                    <a 
+                        href="https://italpuntos.ceramicaitalia.com/assets/Italpuntos.pdf" 
+                        target="_blank"
+                        class="block w-full h-full"
+                    >
+                        <img 
+                        src="/src/assets/img/img tyc.jpg" 
+                        alt="Registration"
+                        class="w-full h-full object-cover cursor-pointer" 
+                        />
+                    </a>
+                    </div>
                 </div>
-            </div>
         </div>
         <Modal v-if="showModal" :showModal="showModal" @confirm="confirmar2" @cancel="cancelar2" :title="titleModal"
             :message="messageModal"></Modal>
