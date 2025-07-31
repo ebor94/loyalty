@@ -1,5 +1,8 @@
 import axios from "axios";
+import { useUserStore } from '../store/user';
 const domain = "https://lilix.ceramicaitalia.com:3001";
+const userData = useUserStore();
+
 
 export const cliente = {
   async getCliente(cc: string): Promise<any> {
@@ -126,10 +129,15 @@ interface ItalparnerResponse {
 }
 
 export const italparner = {
-  
+
   async getInfo(cc: string): Promise<object> {
     try {
-      const response = await axios.get(`${domain}/clientes/italpuntos/consultarItalparner/${cc}`);
+      const response = await axios.get(`${domain}/clientes/italpuntos/consultarItalparner/${cc}`, {
+        headers: {
+          'Authorization': `Bearer ${userData.TokenSession}`,
+          'accept': '*/*'
+        }
+      });
       return response.data;
     } catch (error: any) {
       return {
@@ -139,10 +147,15 @@ export const italparner = {
       };
     }
   },
-  async getBalance(cc: string, Bandera:string): Promise<object> {
+  async getBalance(cc: string, Bandera: string): Promise<object> {
     //console.log("va a consultar synergy", cc , Bandera);
-    try {     
-      const response = await axios.get(`${domain}/clientes/italpuntos/balance-italparner/${cc}/${Bandera}`);
+    try {
+      const response = await axios.get(`${domain}/clientes/italpuntos/balance-italparner/${cc}/${Bandera}`, {
+        headers: {
+          'Authorization': `Bearer ${userData.TokenSession}`,
+          'accept': '*/*'
+        }
+      });
       return response.data;
     } catch (error: any) {
       return {
@@ -152,8 +165,8 @@ export const italparner = {
       };
     }
   },
-  
-  async register(Cedula : string,Nombre: string,Apellido: string,Email: string,Telefono: string,Ciudad: string,Direccion: string,Tratamiento: string): Promise<ItalparnerResponse > {
+
+  async register(Cedula: string, Nombre: string, Apellido: string, Email: string, Telefono: string, Ciudad: string, Direccion: string, Tratamiento: string): Promise<ItalparnerResponse> {
 
     try {
       const data: ItalparnerData = {
@@ -165,19 +178,22 @@ export const italparner = {
         Ciudad,
         Direccion,
         Tratamiento
-        
+
       };
       const response = await axios.post(
-        `${domain}/clientes/italpuntos/registrarItalparner/`, 
+        `${domain}/clientes/italpuntos/registrarItalparner/`,
         data,
         {
           headers: {
+            'Authorization': `Bearer ${userData.TokenSession}`,
             'Content-Type': 'application/json',
             'accept': '*/*'
           }
         }
       );
-  
+
+
+
       return {
         success: true,
         data: response.data
