@@ -56,7 +56,7 @@
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Solicitud</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Comisión</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Puntos</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
               </tr>
             </thead>
@@ -135,7 +135,7 @@
                 <td class="px-6 py-4">{{ formatDate(redemption.fechaExpiracionTicket) }}</td>
                 <td class="px-6 py-4">{{ redemption.empresa }}</td>
                 <td class="px-6 py-4">{{ redemption.codTarjeta }}</td>
-                <td class="px-6 py-4">{{ formatCurrency(redemption.valor) }}</td>
+                <td class="px-6 py-4">{{ redemption.valor }}</td>
                 <td class="px-6 py-4">
                   <span :class="getRedemptionStatusClass(redemption.status)">
                     {{ redemption.status == 'success' ? 'activo' : redemption.status }}
